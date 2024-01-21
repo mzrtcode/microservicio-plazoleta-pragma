@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface IPlatoServicePort {
 
-    void saveCategoria(Plato plato);
+    void savePlato(Plato plato);
 
-    List<Plato> getAllCategoria();
+    List<Plato> getAllPlatos();
 
     Plato getCategoriaById(Long id);
 
