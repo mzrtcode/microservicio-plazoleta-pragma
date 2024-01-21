@@ -12,7 +12,7 @@ public interface IPlatoPersistencePort {
 
     Plato getCategoriaById(Long id);
 
-    void updateCategoria(Plato plato);
+    void updatePlato(Plato plato);
 
-    void deleteCategoria(Long id);
+    void deletePlato(Long id);
 }
