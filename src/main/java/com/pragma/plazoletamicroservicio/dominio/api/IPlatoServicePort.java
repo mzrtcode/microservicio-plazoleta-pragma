@@ -9,9 +9,9 @@ public interface IPlatoServicePort {
 
     List<Plato> getAllPlatos();
 
-    Plato getCategoriaById(Long id);
+    Plato getPlatoById(Long id);
 
-    void updateCategoria(Plato plato);
+    void updatePlato(Plato plato);
 
-    void deleteCategoria(Long id);
+    void deletePlato(Long id);
 }
