@@ -1,10 +1,11 @@
-package com.pragma.plazoletamicroservicio.dominio.api;
+package com.pragma.plazoletamicroservicio.dominio.spi;
 
 
 import com.pragma.plazoletamicroservicio.dominio.model.Restaurante;
+
 import java.util.List;
 
-public interface IRestaurante {
+public interface IRestaurantePersistencePort {
 
     void saveRestaurante(Restaurante restaurante);
 

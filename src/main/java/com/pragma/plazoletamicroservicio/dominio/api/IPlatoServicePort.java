@@ -3,7 +3,7 @@ package com.pragma.plazoletamicroservicio.dominio.api;
 import com.pragma.plazoletamicroservicio.dominio.model.Plato;
 import java.util.List;
 
-public interface IPlato {
+public interface IPlatoServicePort {
 
     void saveCategoria(Plato plato);
 
