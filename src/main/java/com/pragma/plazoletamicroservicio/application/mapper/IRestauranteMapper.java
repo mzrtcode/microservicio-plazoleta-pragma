@@ -2,7 +2,7 @@ package com.pragma.plazoletamicroservicio.application.mapper;
 
 import com.pragma.plazoletamicroservicio.application.dto.RestauranteRequest;
 import com.pragma.plazoletamicroservicio.application.dto.RestauranteResponse;
-import com.pragma.plazoletamicroservicio.dominio.model.Restaurante;
+import com.pragma.plazoletamicroservicio.domain.model.Restaurante;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
