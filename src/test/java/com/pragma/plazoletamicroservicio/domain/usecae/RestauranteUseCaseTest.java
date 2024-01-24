@@ -17,18 +17,17 @@ class RestauranteUseCaseTest {
 
     @Mock
     private IRestaurantePersistencePort restaurantePersistencePort;
-
     @InjectMocks
     private  RestauranteUseCase restauranteUseCase;
-
-
     @Test
     void testSaveRestaurante() {
         Restaurante restaurante = new Restaurante();
+
+        //ACTO
         restauranteUseCase.saveRestaurante(restaurante);
+
+        //ASSERT
         verify(restaurantePersistencePort).saveRestaurante(restaurante);
     }
 
-
-    
 }
