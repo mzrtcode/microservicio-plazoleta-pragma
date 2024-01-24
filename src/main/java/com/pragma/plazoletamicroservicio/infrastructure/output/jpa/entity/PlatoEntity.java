@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "platos")
 public class PlatoEntity {
 
     @Id
@@ -41,6 +42,6 @@ public class PlatoEntity {
     @NotBlank(message = "La URL de imagen es necesaria")
     private String urlImagen;
 
-    private Boolean activo;
+    private Boolean activo = true;
 
 }
