@@ -17,23 +17,4 @@ public class PlatoUseCase implements IPlatoServicePort {
         platoPersistencePort.savePlato(plato);
     }
 
-    @Override
-    public List<Plato> getAllPlatos() {
-        return platoPersistencePort.getAllPlatos();
-    }
-
-    @Override
-    public Plato getPlatoById(Long id) {
-        return platoPersistencePort.getCategoriaById(id);
-    }
-
-    @Override
-    public void updatePlato(Plato plato) {
-        platoPersistencePort.updatePlato(plato);
-    }
-
-    @Override
-    public void deletePlato(Long id) {
-        platoPersistencePort.deletePlato(id);
-    }
 }

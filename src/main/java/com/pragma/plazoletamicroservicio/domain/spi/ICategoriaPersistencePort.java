@@ -9,13 +9,5 @@ public interface ICategoriaPersistencePort {
 
     void saveCategoria(Categoria categoria);
 
-    List<Categoria> getAllCategorias();
-
-    Categoria getCategoriaById(Long id);
-
-    void updateCategoria(Categoria categoria);
-
-    void deleteCategoria(Long id);
-
 
 }

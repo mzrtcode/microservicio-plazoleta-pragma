@@ -8,11 +8,4 @@ public interface IPlatoPersistencePort {
 
     void savePlato(Plato plato);
 
-    List<Plato> getAllPlatos();
-
-    Plato getCategoriaById(Long id);
-
-    void updatePlato(Plato plato);
-
-    void deletePlato(Long id);
 }

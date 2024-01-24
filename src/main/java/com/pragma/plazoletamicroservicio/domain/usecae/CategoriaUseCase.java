@@ -17,23 +17,5 @@ public class CategoriaUseCase implements ICategoriaServicePort {
         categoriaPersistencePort.saveCategoria(categoria);
     }
 
-    @Override
-    public List<Categoria> getAllCategorias() {
-        return categoriaPersistencePort.getAllCategorias();
-    }
 
-    @Override
-    public Categoria getCategoriaById(Long id) {
-        return categoriaPersistencePort.getCategoriaById(id);
-    }
-
-    @Override
-    public void updateCategoria(Categoria categoria) {
-        categoriaPersistencePort.updateCategoria(categoria);
-    }
-
-    @Override
-    public void deleteCategoria(Long id) {
-        categoriaPersistencePort.deleteCategoria(id);
-    }
 }

@@ -16,37 +16,29 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RestauranteHandlerImpl implements IRestauranteHandler{
 
-    private final IRestauranteServicePort restauranteServicePort;
-    private final IUsuarioPersistencePort usuarioServicePort;
-    private final IRestauranteMapper restauranteMapper;
-    @Override
-    public void saveRestaurantInDB(RestauranteRequest restauranteRequest) throws RestauranteInvalidException {
+        private final IRestauranteServicePort restauranteServicePort;
+        private final IUsuarioPersistencePort usuarioServicePort;
+        private final IRestauranteMapper restauranteMapper;
+        @Override
+        public void saveRestaurantInDB(RestauranteRequest restauranteRequest) throws RestauranteInvalidException {
 
-        //Validar que el propietario existe
-        UsuarioDto usuario = usuarioServicePort.getUsuarioPorId(restauranteRequest.getIdPropietario());
-        if(usuario != null && !usuario.getRol().equals(Rol.PROPIETARIO)) throw new RestauranteInvalidException("El usuario no cumple con el rol de ADMINISTRADOR");
+            //Validar que el propietario existe
+            UsuarioDto usuario = usuarioServicePort.getUsuarioPorId(restauranteRequest.getIdPropietario());
+            if(usuario != null && !usuario.getRol().equals(Rol.PROPIETARIO)) throw new RestauranteInvalidException("El usuario no cumple con el rol de ADMINISTRADOR");
 
-        // Validar que NIT sea numerico
-        if(!Validaciones.esNumero(restauranteRequest.getNit())) throw  new RestauranteInvalidException("El NIT debe contener solo numeros");
+            // Validar que NIT sea numerico
+            if(!Validaciones.esNumero(restauranteRequest.getNit())) throw  new RestauranteInvalidException("El NIT debe contener solo numeros");
 
-        // Validar que el telefono sea valido
-        if(!Validaciones.esTelefonoValido(restauranteRequest.getTelefono())) throw new RestauranteInvalidException("El telefono no es valido, debe ser solo numero");
+            // Validar que el telefono sea valido
+            if(!Validaciones.esTelefonoValido(restauranteRequest.getTelefono())) throw new RestauranteInvalidException("El telefono no es valido, debe ser solo numero");
 
-        // Validar numbre restaurante
-        if(!Validaciones.esNombreRestauranteValido(restauranteRequest.getNombre())) throw new RestauranteInvalidException("El nombre del restaurante no es valido");
+            // Validar numbre restaurante
+            if(!Validaciones.esNombreRestauranteValido(restauranteRequest.getNombre())) throw new RestauranteInvalidException("El nombre del restaurante no es valido");
 
-
-
-
-
-
-
-
-
-        Restaurante restaurante = restauranteMapper.toRestaurante(restauranteRequest);
-        restaurante.setIdPropietario(usuario.getId());
-        restauranteServicePort.saveRestaurante(restaurante);
-    }
+            Restaurante restaurante = restauranteMapper.toRestaurante(restauranteRequest);
+            restaurante.setIdPropietario(usuario.getId());
+            restauranteServicePort.saveRestaurante(restaurante);
+        }
 
 
 }
