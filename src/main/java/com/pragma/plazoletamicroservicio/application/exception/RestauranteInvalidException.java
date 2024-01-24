@@ -1,4 +1,7 @@
 package com.pragma.plazoletamicroservicio.application.exception;
 
-public class UsuarioInvalidException extends Exception{
+public class RestauranteInvalidException extends Exception{
+    public RestauranteInvalidException(String message) {
+        super(message);
+    }
 }

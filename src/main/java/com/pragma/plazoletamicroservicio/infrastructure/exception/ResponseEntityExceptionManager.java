@@ -1,7 +1,7 @@
 package com.pragma.plazoletamicroservicio.infrastructure.exception;
 
 import com.pragma.plazoletamicroservicio.application.dto.ErrorMessage;
-import com.pragma.plazoletamicroservicio.application.exception.UsuarioInvalidException;
+import com.pragma.plazoletamicroservicio.application.exception.RestauranteInvalidException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,11 +14,10 @@ public class ResponseEntityExceptionManager {
 
     private static Logger logger = LoggerFactory.getLogger(ResponseEntityExceptionManager.class);
 
-    @ExceptionHandler(UsuarioInvalidException.class)
-    public ResponseEntity<ErrorMessage> handleUsuarioInvalidException(UsuarioInvalidException ex){
+    @ExceptionHandler(RestauranteInvalidException.class)
+    public ResponseEntity<ErrorMessage> handleRestauranteInvalidException(RestauranteInvalidException ex){
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ErrorMessage message = new ErrorMessage(status, ex.getMessage());
-        logger.error("No hay usuarios registrados");
         return ResponseEntity.status(status).body(message);
     }
 
