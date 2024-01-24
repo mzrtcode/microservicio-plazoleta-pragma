@@ -7,12 +7,27 @@ import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.entity.PlatoE
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.entity.RestauranteEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
+import org.mapstruct.factory.Mappers;
+
+import java.util.Optional;
+
 
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface IPlatoEntityMapper {
 
+    IPlatoEntityMapper INSTANCE = Mappers.getMapper(IPlatoEntityMapper.class);
+
     PlatoEntity toEntity(Plato plato);
 
+    Plato toDto(PlatoEntity platoEntity);
+
+    default Optional<Plato> toOptionalPlato(Optional<PlatoEntity> optionalPlatoEntity) {
+        return optionalPlatoEntity.map(this::toDto);
+    }
+
+    default Optional<PlatoEntity> toOptionalPlatoEntity(Optional<Plato> optionalPlato) {
+        return optionalPlato.map(this::toEntity);
+    }
 }
