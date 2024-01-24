@@ -12,28 +12,11 @@ public class RestauranteUseCase implements IRestauranteServicePort {
 
 
     private final IRestaurantePersistencePort restaurantePersistencePort;
+
     @Override
     public void saveRestaurante(Restaurante restaurante) {
         restaurantePersistencePort.saveRestaurante(restaurante);
     }
 
-    @Override
-    public List<Restaurante> getAllRestaurantes() {
-        return restaurantePersistencePort.getAllRestaurantes();
-    }
 
-    @Override
-    public Restaurante getRestauranteById(Long id) {
-        return restaurantePersistencePort.getRestauranteById(id);
-    }
-
-    @Override
-    public void updateRestaurante(Restaurante restaurante) {
-        restaurantePersistencePort.updateRestaurante(restaurante);
-    }
-
-    @Override
-    public void deleteRestaurante(Long id) {
-        restaurantePersistencePort.deleteRestaurante(id);
-    }
 }

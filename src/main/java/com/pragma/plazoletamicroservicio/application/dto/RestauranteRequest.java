@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RestauranteRequest {
 
-    private Long id;
 
     private String nombre;
 

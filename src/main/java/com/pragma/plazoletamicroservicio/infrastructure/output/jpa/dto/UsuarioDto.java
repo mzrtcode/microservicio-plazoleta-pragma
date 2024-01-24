@@ -1,5 +1,6 @@
 package com.pragma.plazoletamicroservicio.infrastructure.output.jpa.dto;
 
+import com.pragma.plazoletamicroservicio.domain.model.Rol;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsuarioDto {
+
+    private Long id;
     private String nombre;
     private String apellido;
     private String numeroDocumento;
@@ -18,5 +21,5 @@ public class UsuarioDto {
     private LocalDate fechaNacimiento;
     private String correo;
     private String clave;
-    private String rol;
+    private Rol rol;
 }
