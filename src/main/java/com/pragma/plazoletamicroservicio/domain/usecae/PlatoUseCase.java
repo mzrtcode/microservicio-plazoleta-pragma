@@ -34,8 +34,8 @@ public class PlatoUseCase implements IPlatoServicePort {
         platoActualizar.setDescription(plato.getDescription());
 
         platoPersistencePort.savePlato(platoActualizar);
-
-
     }
+
+
 
 }
