@@ -8,15 +8,14 @@ import com.pragma.plazoletamicroservicio.domain.exception.PlatoNoExiste;
 import com.pragma.plazoletamicroservicio.domain.model.Plato;
 import com.pragma.plazoletamicroservicio.domain.model.Restaurante;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.exception.RestauranteNotFoundException;
-import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.dto.UsuarioToken;
+import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.AutenticacionService;
+import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.dto.UsuarioAutenticado;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +24,7 @@ public class PlatoHandlerImpl implements  IPlatoHandler{
     private final IPlatoServicePort platoServicePort;
     private final IRestauranteServicePort restauranteServicePort;
     private final IPlatoMapper platoMapper;
+    private final AutenticacionService autenticacionService;
     @Override
     public void savePlatoInDB(PlatoRequest platoRequest) {
         Plato plato = platoMapper.toPlato(platoRequest);
@@ -41,7 +41,8 @@ public class PlatoHandlerImpl implements  IPlatoHandler{
         if(platoOptional.isEmpty()) throw new PlatoNoExiste("El plato no existe");
 
         Restaurante restaurante = restauranteServicePort.getRestauranteById(platoOptional.get().getId());
-        if(restaurante.getIdPropietario() != obtenerIdPrincipal()) throw new RestauranteNotFoundException("El restaurante pertenece a otro propietario");
+        UsuarioAutenticado usuarioAutenticado = autenticacionService.obtenerUsuarioSesionActual();
+        if(restaurante.getIdPropietario() != usuarioAutenticado.getId()) throw new RestauranteNotFoundException("El restaurante pertenece a otro propietario");
 
 
         Plato plato = platoOptional.get();
@@ -62,14 +63,4 @@ public class PlatoHandlerImpl implements  IPlatoHandler{
         platoServicePort.savePlato(plato);
     }
 
-    private Long obtenerIdPrincipal() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null && authentication.getPrincipal() instanceof UsuarioToken) {
-            UsuarioToken usuarioToken = (UsuarioToken) authentication.getPrincipal();
-            return usuarioToken.getId();
-        }
-
-        return 0L;
-    }
 }

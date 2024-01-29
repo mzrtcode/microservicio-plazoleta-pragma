@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsuarioToken {
+public class UsuarioAutenticado {
     private Long id;
     private List<GrantedAuthority> authorities;
     private String token;

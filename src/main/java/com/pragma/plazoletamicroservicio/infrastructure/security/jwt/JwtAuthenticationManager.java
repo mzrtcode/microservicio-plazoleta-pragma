@@ -1,6 +1,6 @@
 package com.pragma.plazoletamicroservicio.infrastructure.security.jwt;
 
-import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.dto.UsuarioToken;
+import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.dto.UsuarioAutenticado;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -54,7 +54,7 @@ public class JwtAuthenticationManager {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public UsuarioToken generarUsuarioToken(String token) {
+    public UsuarioAutenticado generarUsuarioToken(String token) {
         Claims claims = Jwts
                 .parserBuilder()
                 .setSigningKey(getKey())
@@ -67,7 +67,7 @@ public class JwtAuthenticationManager {
         List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(rolString));
 
 
-        return UsuarioToken.builder()
+        return UsuarioAutenticado.builder()
                 .id(id)
                 .authorities(authorities)
                 .token(token)

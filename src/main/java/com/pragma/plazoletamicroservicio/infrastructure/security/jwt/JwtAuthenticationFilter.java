@@ -1,6 +1,6 @@
 package com.pragma.plazoletamicroservicio.infrastructure.security.jwt;
 
-import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.dto.UsuarioToken;
+import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.dto.UsuarioAutenticado;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,11 +34,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if(jwtService.isTokenValid(token)){
             //Guardar usuario en el security context
-            UsuarioToken usuarioToken = jwtService.generarUsuarioToken(token);
+            UsuarioAutenticado usuarioAutenticado = jwtService.generarUsuarioToken(token);
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    usuarioToken,
+                    usuarioAutenticado,
                     null,
-                    usuarioToken.getAuthorities());
+                    usuarioAutenticado.getAuthorities());
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authToken);
             filterChain.doFilter(request,response);

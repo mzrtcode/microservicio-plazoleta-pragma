@@ -9,9 +9,12 @@ import com.pragma.plazoletamicroservicio.domain.spi.IRestaurantePersistencePort;
 import com.pragma.plazoletamicroservicio.domain.usecae.CategoriaUseCase;
 import com.pragma.plazoletamicroservicio.domain.usecae.PlatoUseCase;
 import com.pragma.plazoletamicroservicio.domain.usecae.RestauranteUseCase;
+import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.dto.UsuarioAutenticado;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Configuration
 @RequiredArgsConstructor
@@ -40,7 +43,6 @@ public class BeanConfiguration {
     public ICategoriaServicePort categoriaServicePort(){
         return new CategoriaUseCase(categoriaPersistencePort);
     }
-
 
 
 
