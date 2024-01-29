@@ -3,9 +3,13 @@ package com.pragma.plazoletamicroservicio.application.handler;
 import com.pragma.plazoletamicroservicio.application.dto.PlatoRequest;
 import com.pragma.plazoletamicroservicio.application.mapper.IPlatoMapper;
 import com.pragma.plazoletamicroservicio.domain.api.IPlatoServicePort;
+import com.pragma.plazoletamicroservicio.domain.api.IRestauranteServicePort;
 import com.pragma.plazoletamicroservicio.domain.exception.PlatoNoExiste;
 import com.pragma.plazoletamicroservicio.domain.model.Plato;
+import com.pragma.plazoletamicroservicio.domain.model.Restaurante;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.exception.RestauranteNotFoundException;
+import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.AutenticacionService;
+import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.dto.UsuarioAutenticado;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,6 +29,12 @@ class PlatoHandlerImplTest {
 
     @Mock
     private  IPlatoMapper platoMapper;
+
+    @Mock
+    private  IRestauranteServicePort restauranteServicePort;
+
+    @Mock
+    private AutenticacionService autenticacionService;
 
     @InjectMocks
     private  PlatoHandlerImpl platoHandler;
@@ -48,11 +58,12 @@ class PlatoHandlerImplTest {
     void actualizarPlatoInDBPlatoNoExiste() throws PlatoNoExiste {
         Long idPlatoActualizar = 40L;
         PlatoRequest platoRequest = new PlatoRequest();
+
         when(platoServicePort.obtenerPlatoPorId(idPlatoActualizar)).thenReturn(Optional.empty());
 
         // ASSERT ACT
         assertThrows(PlatoNoExiste.class, () ->{
-            platoHandler.savePlatoInDB(platoRequest);
+            platoHandler.actualizarPlatoInDB(platoRequest, idPlatoActualizar);
         });
 
     }
@@ -64,11 +75,25 @@ class PlatoHandlerImplTest {
         plato.setDescription("Descripción del plato");
         Long id = 1L;
 
+        Long restauranteId = 20L;
+
+
+        Restaurante restaurante = new Restaurante();
+        restaurante.setId(3L);
+        restaurante.setIdPropietario(2L);
+
         Plato platoPersistido = new Plato();
         platoPersistido.setPrecio(15.0);
         platoPersistido.setDescription("Descripción persistida");
+        platoPersistido.setRestaurante(restaurante);
+
+
+        UsuarioAutenticado usuarioAutenticado = new UsuarioAutenticado();
+        usuarioAutenticado.setId(2L);
 
         when(platoServicePort.obtenerPlatoPorId(id)).thenReturn(Optional.of(platoPersistido));
+        when(restauranteServicePort.getRestauranteById(restauranteId)).thenReturn(restaurante);
+        when(autenticacionService.obtenerUsuarioSesionActual()).thenReturn(usuarioAutenticado);
 
         // ACT aqui se cambia los valores por referencia
         platoHandler.actualizarPlatoInDB(plato, id);

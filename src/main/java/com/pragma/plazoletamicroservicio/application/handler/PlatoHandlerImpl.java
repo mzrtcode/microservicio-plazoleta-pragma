@@ -34,13 +34,10 @@ public class PlatoHandlerImpl implements  IPlatoHandler{
     @Override
     public void actualizarPlatoInDB(PlatoRequest platoRequest, Long id) throws PlatoNoExiste, RestauranteNotFoundException {
 
-        //Validar que el plato a modificar pertenesca al restaurante del propietario
-        // traer el plato con el id que dio el usuario y de ese plato sacar el restaurante id
-        // traer el restaurante y mirar el id del propietario condincide con el id del usuario con session actual
         Optional<Plato> platoOptional = platoServicePort.obtenerPlatoPorId(id);
         if(platoOptional.isEmpty()) throw new PlatoNoExiste("El plato no existe");
 
-        Restaurante restaurante = restauranteServicePort.getRestauranteById(platoOptional.get().getId());
+        Restaurante restaurante = restauranteServicePort.getRestauranteById(platoOptional.get().getRestaurante().getId());
         UsuarioAutenticado usuarioAutenticado = autenticacionService.obtenerUsuarioSesionActual();
         if(restaurante.getIdPropietario() != usuarioAutenticado.getId()) throw new RestauranteNotFoundException("El restaurante pertenece a otro propietario");
 
