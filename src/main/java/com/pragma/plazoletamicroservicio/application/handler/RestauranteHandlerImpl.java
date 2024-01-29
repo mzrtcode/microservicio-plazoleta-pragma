@@ -23,7 +23,7 @@ public class RestauranteHandlerImpl implements IRestauranteHandler{
 
             //Validar que el propietario existe y el rol es Propietario
             UsuarioDto usuario = usuarioServicePort.getUsuarioPorId(restauranteRequest.getIdPropietario());
-            if(usuario != null && !usuario.getRol().equals(Rol.PROPIETARIO)) throw new RestauranteInvalidException("El usuario no cumple con el rol de ADMINISTRADOR");
+            if(usuario != null && !usuario.getRol().equals(Rol.PROPIETARIO)) throw new RestauranteInvalidException("El usuario no es un propietario");
 
             Restaurante restaurante = restauranteMapper.toRestaurante(restauranteRequest);
             restaurante.setIdPropietario(usuario.getId());
