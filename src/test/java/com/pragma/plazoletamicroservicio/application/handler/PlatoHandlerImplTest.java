@@ -5,6 +5,7 @@ import com.pragma.plazoletamicroservicio.application.mapper.IPlatoMapper;
 import com.pragma.plazoletamicroservicio.domain.api.IPlatoServicePort;
 import com.pragma.plazoletamicroservicio.domain.exception.PlatoNoExiste;
 import com.pragma.plazoletamicroservicio.domain.model.Plato;
+import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.exception.RestauranteNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -57,7 +58,7 @@ class PlatoHandlerImplTest {
     }
 
     @Test
-    void actualizarPlatoInDBPlatoExiste() throws PlatoNoExiste {
+    void actualizarPlatoInDBPlatoExiste() throws PlatoNoExiste, RestauranteNotFoundException {
         PlatoRequest plato = new PlatoRequest();
         plato.setPrecio(10.0);
         plato.setDescription("Descripción del plato");

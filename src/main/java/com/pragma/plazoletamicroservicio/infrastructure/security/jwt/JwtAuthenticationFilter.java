@@ -29,7 +29,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
         if(jwtService.isTokenValid(token)){
-            System.out.println("Paso por el filtro yyyyyy el token es valido: " + jwtService.isTokenValid(token));
             //Guardar usuario en el security context
             UsuarioToken usuarioToken = jwtService.generarUsuarioToken(token);
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

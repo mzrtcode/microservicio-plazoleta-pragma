@@ -16,4 +16,6 @@ public interface IRestauranteEntityMapper {
         return Rol.valueOf(rol);
     }
 
+    Restaurante toRestaurante(RestauranteEntity restauranteEntity);
+
 }

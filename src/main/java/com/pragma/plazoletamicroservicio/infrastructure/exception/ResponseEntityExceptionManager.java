@@ -2,6 +2,7 @@ package com.pragma.plazoletamicroservicio.infrastructure.exception;
 
 import com.pragma.plazoletamicroservicio.application.dto.ErrorMessage;
 import com.pragma.plazoletamicroservicio.application.exception.RestauranteInvalidException;
+import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.exception.RestauranteNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,13 @@ public class ResponseEntityExceptionManager {
 
     @ExceptionHandler(RestauranteInvalidException.class)
     public ResponseEntity<ErrorMessage> handleRestauranteInvalidException(RestauranteInvalidException ex){
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorMessage message = new ErrorMessage(status, ex.getMessage());
+        return ResponseEntity.status(status).body(message);
+    }
+
+    @ExceptionHandler(RestauranteNotFoundException.class)
+    public ResponseEntity<ErrorMessage> handleRestauranteNotFoundException(RestauranteNotFoundException ex){
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ErrorMessage message = new ErrorMessage(status, ex.getMessage());
         return ResponseEntity.status(status).body(message);
