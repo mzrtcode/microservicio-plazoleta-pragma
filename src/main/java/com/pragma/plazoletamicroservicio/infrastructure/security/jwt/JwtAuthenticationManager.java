@@ -67,6 +67,10 @@ public class JwtAuthenticationManager {
         List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(rolString));
 
 
-        return new UsuarioToken(id, authorities);
+        return UsuarioToken.builder()
+                .id(id)
+                .authorities(authorities)
+                .token(token)
+                .build();
     }
 }

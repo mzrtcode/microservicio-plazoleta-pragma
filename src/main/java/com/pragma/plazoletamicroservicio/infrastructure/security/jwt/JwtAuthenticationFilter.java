@@ -27,6 +27,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String token = getTokenFromRequest(request);
 
+        if (token == null){
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if(jwtService.isTokenValid(token)){
             //Guardar usuario en el security context
@@ -39,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authToken);
             filterChain.doFilter(request,response);
         }
-    }
+    }   
 
 
 
