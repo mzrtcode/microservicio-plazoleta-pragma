@@ -28,8 +28,11 @@ public class RestauranteRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RestauranteResponse>> getAllRestaurantes(){
-        List<RestauranteResponse> allRestaurantes = restauranteHandler.getAllRestaurantes();
+    public ResponseEntity<List<RestauranteResponse>> getAllRestaurantes(
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize){
+
+        List<RestauranteResponse> allRestaurantes = restauranteHandler.getAllRestaurantes(pageNo, pageSize);
         return ResponseEntity.ok(allRestaurantes);
     }
 }

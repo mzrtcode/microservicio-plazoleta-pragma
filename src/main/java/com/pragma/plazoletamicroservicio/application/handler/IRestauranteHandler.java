@@ -10,6 +10,6 @@ public interface IRestauranteHandler {
 
     void saveRestaurantInDB(RestauranteRequest restauranteRequest) throws RestauranteInvalidException;
 
-    List<RestauranteResponse> getAllRestaurantes();
+    List<RestauranteResponse> getAllRestaurantes(int pageNo, int pageSize);
 
 }

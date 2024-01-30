@@ -5,6 +5,7 @@ import com.pragma.plazoletamicroservicio.domain.model.Rol;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.entity.RestauranteEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public interface IRestauranteEntityMapper {
     List<Restaurante> toListRestaurante(List<RestauranteEntity> restauranteEntityList);
 
     List<RestauranteEntity> toListRestauranteEntity(List<Restaurante> restauranteList);
+
 
 
 }

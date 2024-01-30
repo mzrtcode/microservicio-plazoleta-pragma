@@ -41,8 +41,8 @@ public class RestauranteHandlerImpl implements IRestauranteHandler {
     }
 
     @Override
-    public List<RestauranteResponse> getAllRestaurantes() {
-        List<Restaurante> restauranteList = restauranteServicePort.getAllRestaurantes();
+    public List<RestauranteResponse> getAllRestaurantes(int pageNo, int pageSize) {
+        List<Restaurante> restauranteList = restauranteServicePort.getAllRestaurantes(pageNo, pageSize);
         return restauranteMapper.toRestauranteResponseList(restauranteList);
     }
 
