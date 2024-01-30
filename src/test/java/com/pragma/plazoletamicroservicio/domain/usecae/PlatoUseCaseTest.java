@@ -95,21 +95,16 @@ class PlatoUseCaseTest {
 
     @Test
     public void testActualizarPlatoNoExistente() throws PlatoNoExiste {
-        // Preparación
+
+        Long platoId = 1L;
         Plato plato = new Plato();
-        plato.setPrecio(10.0);
-        plato.setDescription("Descripción del plato");
-        Long id = 1L;
 
-        when(platoPersistencePort.obtenerPlatoPorId(id)).thenReturn(Optional.empty());
+        when(platoPersistencePort.obtenerPlatoPorId(platoId)).thenReturn(Optional.empty());
 
-        // ACT
-        platoUseCase.actualizarPlato(plato, id);
 
-        // ASSERT
-
+        // ASSERT ACT
         assertThrows(PlatoNoExiste.class, () -> {
-            platoUseCase.actualizarPlato(plato, id);
+            platoUseCase.actualizarPlato(plato, platoId);
         });
 
     }

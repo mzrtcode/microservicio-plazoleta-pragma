@@ -79,13 +79,14 @@ class PlatoHandlerImplTest {
 
 
         Restaurante restaurante = new Restaurante();
-        restaurante.setId(3L);
+        restaurante.setId(restauranteId);
         restaurante.setIdPropietario(2L);
 
         Plato platoPersistido = new Plato();
         platoPersistido.setPrecio(15.0);
         platoPersistido.setDescription("Descripción persistida");
         platoPersistido.setRestaurante(restaurante);
+        platoPersistido.setActivo(false);
 
 
         UsuarioAutenticado usuarioAutenticado = new UsuarioAutenticado();

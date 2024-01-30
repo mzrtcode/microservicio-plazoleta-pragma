@@ -2,6 +2,7 @@ package com.pragma.plazoletamicroservicio.domain.usecae;
 
 import com.pragma.plazoletamicroservicio.domain.model.Restaurante;
 import com.pragma.plazoletamicroservicio.domain.spi.IRestaurantePersistencePort;
+import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.exception.RestauranteNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,6 +29,17 @@ class RestauranteUseCaseTest {
 
         //ASSERT
         verify(restaurantePersistencePort).saveRestaurante(restaurante);
+    }
+
+    @Test
+    void getRestauranteById() throws RestauranteNotFoundException {
+        Long idRestaurante =1L;
+
+        //ACTO
+        restauranteUseCase.getRestauranteById(idRestaurante);
+
+        //ASSERT
+        verify(restaurantePersistencePort).getRestauranteById(idRestaurante);
     }
 
 }
