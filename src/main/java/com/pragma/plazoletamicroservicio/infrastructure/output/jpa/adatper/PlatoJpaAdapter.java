@@ -9,6 +9,7 @@ import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.repository.IP
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,6 +27,12 @@ public class PlatoJpaAdapter implements IPlatoPersistencePort {
     @Override
     public Optional<Plato> obtenerPlatoPorId(Long id) throws PlatoNoExiste {
         return platoEntityMapper.toOptionalPlato(platoRepository.findById(id));
+    }
+
+    @Override
+    public List<Plato> getPlatosByRestauranteId(Long id) {
+        List<PlatoEntity> platoEntityList = platoRepository.findByRestauranteId(id);
+        return platoEntityMapper.toPlatoList(platoEntityList);
     }
 
 

@@ -36,6 +36,10 @@ public class PlatoUseCase implements IPlatoServicePort {
         platoPersistencePort.savePlato(platoActualizar);
     }
 
+    @Override
+    public List<Plato> getPlatosByRestauranteId(Long id) {
+        return platoPersistencePort.getPlatosByRestauranteId(id);
+    }
 
 
 }

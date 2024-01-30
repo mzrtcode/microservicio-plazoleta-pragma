@@ -9,6 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -22,6 +23,9 @@ public interface IPlatoEntityMapper {
     PlatoEntity toEntity(Plato plato);
 
     Plato toDto(PlatoEntity platoEntity);
+
+    List<Plato> toPlatoList(List<PlatoEntity> platoEntityList);
+
 
     default Optional<Plato> toOptionalPlato(Optional<PlatoEntity> optionalPlatoEntity) {
         return optionalPlatoEntity.map(this::toDto);

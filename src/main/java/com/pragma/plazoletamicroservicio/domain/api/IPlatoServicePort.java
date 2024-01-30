@@ -12,4 +12,7 @@ public interface IPlatoServicePort {
     Optional<Plato> obtenerPlatoPorId(Long id) throws PlatoNoExiste;
 
     void actualizarPlato(Plato plato, Long id) throws PlatoNoExiste;
+
+    List<Plato> getPlatosByRestauranteId(Long id);
+
 }

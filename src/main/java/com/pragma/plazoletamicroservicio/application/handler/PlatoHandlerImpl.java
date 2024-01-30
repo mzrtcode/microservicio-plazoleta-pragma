@@ -1,6 +1,7 @@
 package com.pragma.plazoletamicroservicio.application.handler;
 
 import com.pragma.plazoletamicroservicio.application.dto.PlatoRequest;
+import com.pragma.plazoletamicroservicio.application.dto.PlatoResponse;
 import com.pragma.plazoletamicroservicio.application.mapper.IPlatoMapper;
 import com.pragma.plazoletamicroservicio.domain.api.IPlatoServicePort;
 import com.pragma.plazoletamicroservicio.domain.api.IRestauranteServicePort;
@@ -15,6 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -39,7 +42,7 @@ public class PlatoHandlerImpl implements  IPlatoHandler{
 
         Restaurante restaurante = restauranteServicePort.getRestauranteById(platoOptional.get().getRestaurante().getId());
         UsuarioAutenticado usuarioAutenticado = autenticacionService.obtenerUsuarioSesionActual();
-        if(restaurante.getIdPropietario() != usuarioAutenticado.getId()) throw new RestauranteNotFoundException("El restaurante pertenece a otro propietario");
+        if(!Objects.equals(restaurante.getIdPropietario(), usuarioAutenticado.getId())) throw new RestauranteNotFoundException("El restaurante pertenece a otro propietario");
 
 
         Plato plato = platoOptional.get();
@@ -59,5 +62,12 @@ public class PlatoHandlerImpl implements  IPlatoHandler{
 
         platoServicePort.savePlato(plato);
     }
+
+    @Override
+    public List<PlatoResponse> getPlatosByRestauranteId(Long id) {
+        List<Plato> platosList = platoServicePort.getPlatosByRestauranteId(id);
+        return platoMapper.toPlatoResponseList(platosList);
+    }
+
 
 }
