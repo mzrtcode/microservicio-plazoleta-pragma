@@ -13,4 +13,6 @@ public interface IRestaurantePersistencePort {
 
     Restaurante getRestauranteById(Long idRestaurante) throws RestauranteNotFoundException;
 
+    List<Restaurante> getAllRestaurantes();
+
 }

@@ -9,6 +9,7 @@ import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.repository.IR
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -28,7 +29,13 @@ public class RestauranteJpaAdapter implements IRestaurantePersistencePort {
     public Restaurante getRestauranteById(Long idRestaurante) throws RestauranteNotFoundException {
         Optional<RestauranteEntity> restauranteEntity = restauranteRepository.findById(idRestaurante);
         if(restauranteEntity.isEmpty()) throw new RestauranteNotFoundException("No se encontro el restaurante");
-        Restaurante restaurante = restauranteMapper.toRestaurante(restauranteEntity.get());
-        return  restaurante;
+        return restauranteMapper.toRestaurante(restauranteEntity.get());
+    }
+
+    @Override
+    public List<Restaurante> getAllRestaurantes() {
+        List<RestauranteEntity> restauranteEntityList = restauranteRepository.findAll();
+        return restauranteMapper.toListRestaurante(restauranteEntityList);
+
     }
 }

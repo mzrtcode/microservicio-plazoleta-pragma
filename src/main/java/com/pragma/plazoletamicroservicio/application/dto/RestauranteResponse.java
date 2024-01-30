@@ -14,13 +14,6 @@ public class RestauranteResponse {
 
     private String nombre;
 
-    private String direccion;
-
-    private Long idPropietario;
-
-    private String telefono;
-
     private String urlLogo;
 
-    private String nit;
 }

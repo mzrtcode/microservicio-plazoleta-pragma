@@ -12,4 +12,6 @@ public interface IRestauranteServicePort {
 
     Restaurante getRestauranteById(Long id) throws RestauranteNotFoundException;
 
+    List<Restaurante> getAllRestaurantes();
+
 }
