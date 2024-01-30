@@ -1,4 +1,4 @@
-package com.pragma.plazoletamicroservicio.domain.usecae;
+package com.pragma.plazoletamicroservicio.domain.usecase;
 
 import com.pragma.plazoletamicroservicio.domain.model.Categoria;
 import com.pragma.plazoletamicroservicio.domain.spi.ICategoriaPersistencePort;
@@ -8,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

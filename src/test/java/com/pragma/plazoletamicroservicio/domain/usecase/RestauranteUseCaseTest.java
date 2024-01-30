@@ -1,4 +1,4 @@
-package com.pragma.plazoletamicroservicio.domain.usecae;
+package com.pragma.plazoletamicroservicio.domain.usecase;
 
 import com.pragma.plazoletamicroservicio.domain.model.Restaurante;
 import com.pragma.plazoletamicroservicio.domain.spi.IRestaurantePersistencePort;
@@ -8,9 +8,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -42,4 +45,14 @@ class RestauranteUseCaseTest {
         verify(restaurantePersistencePort).getRestauranteById(idRestaurante);
     }
 
+    @Test
+    public void testGetAllRestaurantes() {
+        // Datos de prueba
+        Pageable pageable = PageRequest.of(0, 10); // Puedes ajustar los valores según tus necesidades
+
+        // Llamar al método que queremos probar
+        Page<Restaurante> result = restauranteUseCase.getAllRestaurantes(pageable);
+
+        verify(restaurantePersistencePort, times(1)).getAllRestaurantes(pageable);
+    }
 }

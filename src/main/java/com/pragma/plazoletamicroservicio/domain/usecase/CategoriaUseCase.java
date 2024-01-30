@@ -1,11 +1,9 @@
-package com.pragma.plazoletamicroservicio.domain.usecae;
+package com.pragma.plazoletamicroservicio.domain.usecase;
 
 import com.pragma.plazoletamicroservicio.domain.api.ICategoriaServicePort;
 import com.pragma.plazoletamicroservicio.domain.model.Categoria;
 import com.pragma.plazoletamicroservicio.domain.spi.ICategoriaPersistencePort;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 public class CategoriaUseCase implements ICategoriaServicePort {

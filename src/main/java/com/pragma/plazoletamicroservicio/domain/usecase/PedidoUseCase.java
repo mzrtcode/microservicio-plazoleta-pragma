@@ -1,4 +1,4 @@
-package com.pragma.plazoletamicroservicio.domain.usecae;
+package com.pragma.plazoletamicroservicio.domain.usecase;
 
 import com.pragma.plazoletamicroservicio.domain.api.IPedidoServicePort;
 import com.pragma.plazoletamicroservicio.domain.model.Pedido;

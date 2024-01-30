@@ -1,4 +1,4 @@
-package com.pragma.plazoletamicroservicio.domain.usecae;
+package com.pragma.plazoletamicroservicio.domain.usecase;
 
 import com.pragma.plazoletamicroservicio.domain.api.IUsuarioServicePort;
 import com.pragma.plazoletamicroservicio.domain.spi.IUsuarioPersistencePort;

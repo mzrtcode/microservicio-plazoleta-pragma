@@ -1,4 +1,4 @@
-package com.pragma.plazoletamicroservicio.domain.usecae;
+package com.pragma.plazoletamicroservicio.domain.usecase;
 
 import com.pragma.plazoletamicroservicio.domain.exception.PlatoNoExiste;
 import com.pragma.plazoletamicroservicio.domain.model.Plato;
@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -107,5 +109,25 @@ class PlatoUseCaseTest {
             platoUseCase.actualizarPlato(plato, platoId);
         });
 
+    }
+
+    @Test
+    public void testGetPlatosByRestauranteId() {
+        // Datos de prueba
+        Long restauranteId = 1L;
+
+        List<Plato> platos = new ArrayList<>(); // Agrega platos de prueba según tus necesidades
+
+        // Configurar el comportamiento del mock de platoPersistencePort
+        when(platoPersistencePort.getPlatosByRestauranteId(restauranteId)).thenReturn(platos);
+
+        // Llamar al método que queremos probar
+        List<Plato> result = platoUseCase.getPlatosByRestauranteId(restauranteId);
+
+        // Ejemplo de verificación
+        assertEquals(platos, result);
+
+        // Verificar que se llamó al menos una vez al método getPlatosByRestauranteId
+        verify(platoPersistencePort, times(1)).getPlatosByRestauranteId(restauranteId);
     }
 }

@@ -8,16 +8,13 @@ import com.pragma.plazoletamicroservicio.domain.spi.ICategoriaPersistencePort;
 import com.pragma.plazoletamicroservicio.domain.spi.IPlatoPersistencePort;
 import com.pragma.plazoletamicroservicio.domain.spi.IRestaurantePersistencePort;
 import com.pragma.plazoletamicroservicio.domain.spi.IUsuarioPersistencePort;
-import com.pragma.plazoletamicroservicio.domain.usecae.CategoriaUseCase;
-import com.pragma.plazoletamicroservicio.domain.usecae.PlatoUseCase;
-import com.pragma.plazoletamicroservicio.domain.usecae.RestauranteUseCase;
-import com.pragma.plazoletamicroservicio.domain.usecae.UsuarioUseCase;
-import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.dto.UsuarioAutenticado;
+import com.pragma.plazoletamicroservicio.domain.usecase.CategoriaUseCase;
+import com.pragma.plazoletamicroservicio.domain.usecase.PlatoUseCase;
+import com.pragma.plazoletamicroservicio.domain.usecase.RestauranteUseCase;
+import com.pragma.plazoletamicroservicio.domain.usecase.UsuarioUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 @Configuration
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package com.pragma.plazoletamicroservicio.domain.usecae;
+package com.pragma.plazoletamicroservicio.domain.usecase;
 
 import com.pragma.plazoletamicroservicio.domain.api.IPlatoServicePort;
 import com.pragma.plazoletamicroservicio.domain.exception.PlatoNoExiste;

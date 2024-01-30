@@ -13,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.parameters.P;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -65,4 +67,21 @@ class PlatoJpaAdapterTest {
         assertEquals(plato, resultado.get());
     }
 
+    @Test
+    void getPlatosByRestauranteIdTest() {
+        Long id = 1L;
+        PlatoEntity platoEntity = new PlatoEntity();
+        Plato plato = new Plato();
+        List<PlatoEntity> platoEntityList = Arrays.asList(platoEntity);
+        List<Plato> platoList = Arrays.asList(plato);
+
+        when(platoRepository.findByRestauranteId(id)).thenReturn(platoEntityList);
+        when(platoEntityMapper.toPlatoList(platoEntityList)).thenReturn(platoList);
+
+        List<Plato> result = platoJpaAdapter.getPlatosByRestauranteId(id);
+
+        verify(platoRepository, times(1)).findByRestauranteId(id);
+        verify(platoEntityMapper, times(1)).toPlatoList(platoEntityList);
+        assertEquals(platoList, result);
+    }
 }

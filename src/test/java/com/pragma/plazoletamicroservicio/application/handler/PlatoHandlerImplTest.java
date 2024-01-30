@@ -1,6 +1,7 @@
 package com.pragma.plazoletamicroservicio.application.handler;
 
 import com.pragma.plazoletamicroservicio.application.dto.PlatoRequest;
+import com.pragma.plazoletamicroservicio.application.dto.PlatoResponse;
 import com.pragma.plazoletamicroservicio.application.mapper.IPlatoMapper;
 import com.pragma.plazoletamicroservicio.domain.api.IPlatoServicePort;
 import com.pragma.plazoletamicroservicio.domain.api.IRestauranteServicePort;
@@ -16,6 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -102,5 +105,23 @@ class PlatoHandlerImplTest {
         // Verificación
         assertEquals(plato.getPrecio(), platoPersistido.getPrecio());
         assertEquals(plato.getDescription(), platoPersistido.getDescription());
+    }
+
+    @Test
+    void testGetPlatosByRestauranteId() {
+        // Datos de prueba
+        Long restauranteId = 1L;
+        List<Plato> platosMock = List.of(new Plato(/* Datos de prueba */));
+        List<PlatoResponse> platoResponseMock = Collections.singletonList(new PlatoResponse(/* Datos de prueba */));
+
+        // Configurar el comportamiento del mock de platoServicePort
+        when(platoServicePort.getPlatosByRestauranteId(restauranteId)).thenReturn(platosMock);
+
+        // Llamar al método que queremos probar
+        List<PlatoResponse> result = platoHandler.getPlatosByRestauranteId(restauranteId);
+
+        // Verificar que se llamó al menos una vez al método getPlatosByRestauranteId en platoServicePort
+        verify(platoServicePort, times(1)).getPlatosByRestauranteId(restauranteId);
+
     }
 }
