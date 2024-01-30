@@ -1,6 +1,7 @@
 package com.pragma.plazoletamicroservicio.infrastructure.input.rest;
 
 import com.pragma.plazoletamicroservicio.application.dto.RestauranteRequest;
+import com.pragma.plazoletamicroservicio.application.dto.RestauranteDTO;
 import com.pragma.plazoletamicroservicio.application.dto.RestauranteResponse;
 import com.pragma.plazoletamicroservicio.application.exception.RestauranteInvalidException;
 import com.pragma.plazoletamicroservicio.application.handler.IRestauranteHandler;
@@ -28,11 +29,11 @@ public class RestauranteRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RestauranteResponse>> getAllRestaurantes(
+    public ResponseEntity<RestauranteResponse> getAllRestaurantes(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize){
 
-        List<RestauranteResponse> allRestaurantes = restauranteHandler.getAllRestaurantes(pageNo, pageSize);
-        return ResponseEntity.ok(allRestaurantes);
+        RestauranteResponse restaurantes = restauranteHandler.getAllRestaurantes(pageNo, pageSize);
+        return ResponseEntity.ok(restaurantes);
     }
 }

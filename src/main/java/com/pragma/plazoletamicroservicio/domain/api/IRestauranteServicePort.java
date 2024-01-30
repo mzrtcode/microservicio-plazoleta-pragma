@@ -14,6 +14,6 @@ public interface IRestauranteServicePort {
 
     Restaurante getRestauranteById(Long id) throws RestauranteNotFoundException;
 
-    List<Restaurante> getAllRestaurantes(int pageNo, int pageSize);
+    Page<Restaurante> getAllRestaurantes(Pageable pageable);
 
 }

@@ -1,19 +1,19 @@
 package com.pragma.plazoletamicroservicio.application.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class RestauranteResponse {
-
-    private Long id;
-
-    private String nombre;
-
-    private String urlLogo;
-
+    private List<RestauranteDTO> content;
+    private int pageNo;
+    private int pageSize;
+    private long totalElements;
+    private int totalPages;
+    private boolean last;
 }

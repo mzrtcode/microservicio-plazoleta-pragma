@@ -35,9 +35,9 @@ public class RestauranteJpaAdapter implements IRestaurantePersistencePort {
     }
 
     @Override
-    public List<Restaurante> getAllRestaurantes(Pageable pageable) {
-           Page<RestauranteEntity> all = restauranteRepository.findAll(pageable);
-           List<RestauranteEntity> content = all.getContent();
-           return restauranteMapper.toListRestaurante(content);
+    public Page <Restaurante> getAllRestaurantes(Pageable pageable) {
+        Page<RestauranteEntity> entities = restauranteRepository.findAll(pageable);
+        return  entities.map(restauranteMapper::toRestaurante);
+
     }
 }
