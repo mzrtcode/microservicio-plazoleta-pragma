@@ -43,5 +43,10 @@ public class PlatoUseCase implements IPlatoServicePort {
         return platoPersistencePort.getPlatosByRestauranteId(id, pageable);
     }
 
+    @Override
+    public boolean platoExistsById(Long id) {
+        return platoPersistencePort.platoExistsById(id);
+    }
+
 
 }

@@ -8,12 +8,4 @@ public interface IPedidoPersistencePort {
 
     void savePedido(Pedido pedido);
 
-    List<Pedido> getAllPedidos();
-
-    Pedido getPedidoById(Long id);
-
-    void updatePedido(Pedido pedido);
-
-    void deletePedido(Long id);
-
 }

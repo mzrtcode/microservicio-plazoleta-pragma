@@ -17,23 +17,4 @@ public class PedidoUseCase implements IPedidoServicePort {
         pedidoPersistencePort.savePedido(pedido);
     }
 
-    @Override
-    public List<Pedido> getAllPedidos() {
-        return pedidoPersistencePort.getAllPedidos();
-    }
-
-    @Override
-    public Pedido getPedidoById(Long id) {
-        return pedidoPersistencePort.getPedidoById(id);
-    }
-
-    @Override
-    public void updatePedido(Pedido pedido) {
-        pedidoPersistencePort.updatePedido(pedido);
-    }
-
-    @Override
-    public void deletePedido(Long id) {
-        pedidoPersistencePort.deletePedido(id);
-    }
 }

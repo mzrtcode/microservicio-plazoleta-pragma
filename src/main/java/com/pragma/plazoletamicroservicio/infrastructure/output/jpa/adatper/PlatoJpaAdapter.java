@@ -38,5 +38,10 @@ public class PlatoJpaAdapter implements IPlatoPersistencePort {
 
     }
 
+    @Override
+    public boolean platoExistsById(Long id) {
+        return platoRepository.existsById(id);
+    }
+
 
 }

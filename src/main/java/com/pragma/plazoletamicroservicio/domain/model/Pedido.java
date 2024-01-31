@@ -9,14 +9,12 @@ public class Pedido {
 
     private Long id;
 
-    @Min(value = 1 , message = "El id del propietario es requerido")
     private Long idCliente;
 
     private LocalDateTime fecha;
 
     private EstadoPedido estadoPedido;
 
-    @Min(value = 1 , message = "El id del propietario es requerido")
     private Long idChef;
 
     private Restaurante restaurante;

@@ -16,4 +16,6 @@ public interface IPlatoHandler {
 
     PlatoResponse getPlatosByRestauranteId(Long id, int pageNo, int pageSize);
 
+    boolean platoExistsById(Long id);
+
 }

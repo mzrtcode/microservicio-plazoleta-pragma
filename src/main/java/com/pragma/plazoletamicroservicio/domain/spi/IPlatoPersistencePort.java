@@ -15,4 +15,6 @@ public interface IPlatoPersistencePort {
 
     Page<Plato> getPlatosByRestauranteId(Long id, Pageable pageable);
 
+    boolean platoExistsById(Long id);
+
 }

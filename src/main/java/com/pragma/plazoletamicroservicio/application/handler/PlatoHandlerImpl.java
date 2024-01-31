@@ -24,12 +24,13 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class PlatoHandlerImpl implements  IPlatoHandler{
+public class PlatoHandlerImpl implements IPlatoHandler {
 
     private final IPlatoServicePort platoServicePort;
     private final IRestauranteServicePort restauranteServicePort;
     private final IPlatoMapper platoMapper;
     private final AutenticacionService autenticacionService;
+
     @Override
     public void savePlatoInDB(PlatoRequest platoRequest) {
         Plato plato = platoMapper.toPlato(platoRequest);
@@ -40,25 +41,26 @@ public class PlatoHandlerImpl implements  IPlatoHandler{
     public void actualizarPlatoInDB(PlatoRequest platoRequest, Long id) throws PlatoNoExiste, RestauranteNotFoundException {
 
         Optional<Plato> platoOptional = platoServicePort.obtenerPlatoPorId(id);
-        if(platoOptional.isEmpty()) throw new PlatoNoExiste("El plato no existe");
+        if (platoOptional.isEmpty()) throw new PlatoNoExiste("El plato no existe");
 
         Restaurante restaurante = restauranteServicePort.getRestauranteById(platoOptional.get().getRestaurante().getId());
         UsuarioAutenticado usuarioAutenticado = autenticacionService.obtenerUsuarioSesionActual();
-        if(!Objects.equals(restaurante.getIdPropietario(), usuarioAutenticado.getId())) throw new RestauranteNotFoundException("El restaurante pertenece a otro propietario");
+        if (!Objects.equals(restaurante.getIdPropietario(), usuarioAutenticado.getId()))
+            throw new RestauranteNotFoundException("El restaurante pertenece a otro propietario");
 
 
         Plato plato = platoOptional.get();
 
-        if(platoRequest.getDescription() != null){
+        if (platoRequest.getDescription() != null) {
             plato.setDescription(platoRequest.getDescription());
         }
 
-        if(platoRequest.getPrecio() != null){
+        if (platoRequest.getPrecio() != null) {
             plato.setPrecio(platoRequest.getPrecio());
 
         }
 
-        if(platoRequest.getActivo() != null){
+        if (platoRequest.getActivo() != null) {
             plato.setActivo(platoRequest.getActivo());
         }
 
@@ -84,6 +86,11 @@ public class PlatoHandlerImpl implements  IPlatoHandler{
         platoResponse.setLast(pagePlatos.isLast());
 
         return platoResponse;
+    }
+
+    @Override
+    public boolean platoExistsById(Long id) {
+        return platoServicePort.platoExistsById(id);
     }
 
 
