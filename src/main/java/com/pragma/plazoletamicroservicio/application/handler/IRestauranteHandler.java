@@ -7,6 +7,7 @@ import com.pragma.plazoletamicroservicio.application.exception.RestauranteInvali
 
 import java.util.List;
 
+
 public interface IRestauranteHandler {
 
     void saveRestaurantInDB(RestauranteRequest restauranteRequest) throws RestauranteInvalidException;

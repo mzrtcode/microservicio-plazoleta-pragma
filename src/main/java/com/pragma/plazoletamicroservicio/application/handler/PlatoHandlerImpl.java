@@ -1,5 +1,6 @@
 package com.pragma.plazoletamicroservicio.application.handler;
 
+import com.pragma.plazoletamicroservicio.application.dto.PlatoDTO;
 import com.pragma.plazoletamicroservicio.application.dto.PlatoRequest;
 import com.pragma.plazoletamicroservicio.application.dto.PlatoResponse;
 import com.pragma.plazoletamicroservicio.application.mapper.IPlatoMapper;
@@ -12,8 +13,9 @@ import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.exception.Res
 import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.AutenticacionService;
 import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.dto.UsuarioAutenticado;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -64,9 +66,26 @@ public class PlatoHandlerImpl implements  IPlatoHandler{
     }
 
     @Override
-    public List<PlatoResponse> getPlatosByRestauranteId(Long id) {
-        List<Plato> platosList = platoServicePort.getPlatosByRestauranteId(id);
-        return platoMapper.toPlatoResponseList(platosList);
+    public PlatoResponse getPlatosByRestauranteId(Long id, int pageNo, int pageSize) {
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        Page<Plato> pagePlatos = platoServicePort.getPlatosByRestauranteId(id, pageable);
+        List<Plato> platosList = pagePlatos.getContent();
+
+        List<PlatoDTO> content = platoMapper.toPlatoDtoList(platosList);
+
+        PlatoResponse platoResponse = new PlatoResponse();
+        platoResponse.setContent(content);
+        platoResponse.setPageNo(pagePlatos.getNumber());
+        platoResponse.setPageSize(pagePlatos.getSize());
+        platoResponse.setTotalElements(pagePlatos.getTotalElements());
+        platoResponse.setTotalPages(pagePlatos.getTotalPages());
+        platoResponse.setLast(pagePlatos.isLast());
+
+        return platoResponse;
+
+
     }
 
 

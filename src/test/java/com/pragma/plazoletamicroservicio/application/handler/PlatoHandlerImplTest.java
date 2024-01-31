@@ -1,7 +1,7 @@
 package com.pragma.plazoletamicroservicio.application.handler;
 
+import com.pragma.plazoletamicroservicio.application.dto.PlatoDTO;
 import com.pragma.plazoletamicroservicio.application.dto.PlatoRequest;
-import com.pragma.plazoletamicroservicio.application.dto.PlatoResponse;
 import com.pragma.plazoletamicroservicio.application.mapper.IPlatoMapper;
 import com.pragma.plazoletamicroservicio.domain.api.IPlatoServicePort;
 import com.pragma.plazoletamicroservicio.domain.api.IRestauranteServicePort;
@@ -112,13 +112,13 @@ class PlatoHandlerImplTest {
         // Datos de prueba
         Long restauranteId = 1L;
         List<Plato> platosMock = List.of(new Plato(/* Datos de prueba */));
-        List<PlatoResponse> platoResponseMock = Collections.singletonList(new PlatoResponse(/* Datos de prueba */));
+        List<PlatoDTO> platoDTOMock = Collections.singletonList(new PlatoDTO(/* Datos de prueba */));
 
         // Configurar el comportamiento del mock de platoServicePort
         when(platoServicePort.getPlatosByRestauranteId(restauranteId)).thenReturn(platosMock);
 
         // Llamar al método que queremos probar
-        List<PlatoResponse> result = platoHandler.getPlatosByRestauranteId(restauranteId);
+        List<PlatoDTO> result = platoHandler.getPlatosByRestauranteId(restauranteId);
 
         // Verificar que se llamó al menos una vez al método getPlatosByRestauranteId en platoServicePort
         verify(platoServicePort, times(1)).getPlatosByRestauranteId(restauranteId);

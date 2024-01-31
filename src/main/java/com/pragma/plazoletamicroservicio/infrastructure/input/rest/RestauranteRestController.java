@@ -1,8 +1,8 @@
 package com.pragma.plazoletamicroservicio.infrastructure.input.rest;
 
+import com.pragma.plazoletamicroservicio.application.dto.PlatoDTO;
 import com.pragma.plazoletamicroservicio.application.dto.PlatoResponse;
 import com.pragma.plazoletamicroservicio.application.dto.RestauranteRequest;
-import com.pragma.plazoletamicroservicio.application.dto.RestauranteDTO;
 import com.pragma.plazoletamicroservicio.application.dto.RestauranteResponse;
 import com.pragma.plazoletamicroservicio.application.exception.RestauranteInvalidException;
 import com.pragma.plazoletamicroservicio.application.handler.IPlatoHandler;
@@ -42,8 +42,11 @@ public class RestauranteRestController {
     }
 
     @GetMapping("/{id}/platos")
-    public ResponseEntity<List<PlatoResponse>> getAllByRestauranteId(@PathVariable Long id){
-        List<PlatoResponse> platosList = platoHandler.getPlatosByRestauranteId(id);
-        return ResponseEntity.ok(platosList);
+    public ResponseEntity<PlatoResponse> getAllByRestauranteId(
+            @PathVariable Long id,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize){
+        PlatoResponse platoResponse = platoHandler.getPlatosByRestauranteId(id, pageNo, pageSize);
+        return ResponseEntity.ok(platoResponse);
     }
 }

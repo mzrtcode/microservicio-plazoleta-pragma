@@ -1,28 +1,19 @@
 package com.pragma.plazoletamicroservicio.application.dto;
 
-import com.pragma.plazoletamicroservicio.domain.model.Categoria;
-import com.pragma.plazoletamicroservicio.domain.model.Restaurante;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class PlatoResponse {
-
-    private Long id;
-    private String nombre;
-
-    private Categoria categoria;
-
-    private String description;
-
-    private Double precio;
-
-    private Restaurante restaurante;
-
-    private String urlImagen;
-
-    private Boolean activo;
+    private List<PlatoDTO> content;
+    private int pageNo;
+    private int pageSize;
+    private long totalElements;
+    private int totalPages;
+    private boolean last;
 }

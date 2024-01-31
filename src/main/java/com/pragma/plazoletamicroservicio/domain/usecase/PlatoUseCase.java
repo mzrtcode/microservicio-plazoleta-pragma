@@ -5,6 +5,8 @@ import com.pragma.plazoletamicroservicio.domain.exception.PlatoNoExiste;
 import com.pragma.plazoletamicroservicio.domain.model.Plato;
 import com.pragma.plazoletamicroservicio.domain.spi.IPlatoPersistencePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,8 +39,8 @@ public class PlatoUseCase implements IPlatoServicePort {
     }
 
     @Override
-    public List<Plato> getPlatosByRestauranteId(Long id) {
-        return platoPersistencePort.getPlatosByRestauranteId(id);
+    public Page<Plato> getPlatosByRestauranteId(Long id, Pageable pageable) {
+        return platoPersistencePort.getPlatosByRestauranteId(id, pageable);
     }
 
 
