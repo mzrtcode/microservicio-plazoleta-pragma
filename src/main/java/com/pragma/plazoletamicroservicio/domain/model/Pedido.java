@@ -19,19 +19,16 @@ public class Pedido {
 
     private Restaurante restaurante;
 
-    private List<PedidoPlato> pedidoPlatos;
-
     public Pedido() {
     }
 
-    public Pedido(Long id, Long idCliente, LocalDateTime fecha, EstadoPedido estadoPedido, Long idChef, Restaurante restaurante, List<PedidoPlato> pedidoPlatos) {
+    public Pedido(Long id, Long idCliente, LocalDateTime fecha, EstadoPedido estadoPedido, Long idChef, Restaurante restaurante) {
         this.id = id;
         this.idCliente = idCliente;
         this.fecha = fecha;
         this.estadoPedido = estadoPedido;
         this.idChef = idChef;
         this.restaurante = restaurante;
-        this.pedidoPlatos = pedidoPlatos;
     }
 
     public Long getId() {
@@ -80,13 +77,5 @@ public class Pedido {
 
     public void setRestaurante(Restaurante restaurante) {
         this.restaurante = restaurante;
-    }
-
-    public List<PedidoPlato> getPedidoPlatos() {
-        return pedidoPlatos;
-    }
-
-    public void setPedidoPlatos(List<PedidoPlato> pedidoPlatos) {
-        this.pedidoPlatos = pedidoPlatos;
     }
 }
