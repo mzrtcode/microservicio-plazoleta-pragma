@@ -1,17 +1,8 @@
 package com.pragma.plazoletamicroservicio.infrastructure.configuration;
 
-import com.pragma.plazoletamicroservicio.domain.api.ICategoriaServicePort;
-import com.pragma.plazoletamicroservicio.domain.api.IPlatoServicePort;
-import com.pragma.plazoletamicroservicio.domain.api.IRestauranteServicePort;
-import com.pragma.plazoletamicroservicio.domain.api.IUsuarioServicePort;
-import com.pragma.plazoletamicroservicio.domain.spi.ICategoriaPersistencePort;
-import com.pragma.plazoletamicroservicio.domain.spi.IPlatoPersistencePort;
-import com.pragma.plazoletamicroservicio.domain.spi.IRestaurantePersistencePort;
-import com.pragma.plazoletamicroservicio.domain.spi.IUsuarioPersistencePort;
-import com.pragma.plazoletamicroservicio.domain.usecase.CategoriaUseCase;
-import com.pragma.plazoletamicroservicio.domain.usecase.PlatoUseCase;
-import com.pragma.plazoletamicroservicio.domain.usecase.RestauranteUseCase;
-import com.pragma.plazoletamicroservicio.domain.usecase.UsuarioUseCase;
+import com.pragma.plazoletamicroservicio.domain.api.*;
+import com.pragma.plazoletamicroservicio.domain.spi.*;
+import com.pragma.plazoletamicroservicio.domain.usecase.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +18,8 @@ public class BeanConfiguration {
     private final IPlatoPersistencePort platoServicePort;
     private final ICategoriaPersistencePort categoriaPersistencePort;
     private final IUsuarioPersistencePort usuarioServicePort;
+    private final IPedidoPersistencePort pedidoPersistencePort;
+    private final IPedidoPlatoPersistencePort platoPersistencePort;
 
 
     @Bean
@@ -48,6 +41,16 @@ public class BeanConfiguration {
     @Bean
     public IUsuarioServicePort usuarioServicePort(){
         return new UsuarioUseCase(usuarioServicePort);
+    }
+
+    @Bean
+    public IPedidoServicePort pedidoServicePort(){
+        return new PedidoUseCase(pedidoPersistencePort);
+    }
+
+    @Bean
+    public IPedidoPlatoServicePort pedidoPlatoServicePort(){
+        return new PedidoPlatoUseCase(platoPersistencePort);
     }
 
 

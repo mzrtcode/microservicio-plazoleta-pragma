@@ -8,7 +8,7 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
-public interface IPedidoMapper {
+public interface IPedidoEntityMapper {
 
     PedidoEntity toPedidoEntity(Pedido pedido);
 }
