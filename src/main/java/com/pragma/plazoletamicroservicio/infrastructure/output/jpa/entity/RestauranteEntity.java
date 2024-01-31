@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Entity
-@Table(name = "restaurantes")
 @Data
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "restaurantes")
 public class RestauranteEntity {
 
     @Id
@@ -35,8 +37,5 @@ public class RestauranteEntity {
 
     @NotBlank(message = "El NIT es requerida")
     private String nit;
-
-//    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
-//    private List<PlatoEntity> platos;
 
 }

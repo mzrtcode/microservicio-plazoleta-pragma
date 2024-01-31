@@ -1,6 +1,8 @@
 package com.pragma.plazoletamicroservicio.domain.model;
 
 
+import java.util.List;
+
 public class Plato {
 
     private Long id;
@@ -18,7 +20,21 @@ public class Plato {
 
     private Boolean activo;
 
+    private List<PedidoPlato> pedidoPlato;
+
     public Plato() {
+    }
+
+    public Plato(Long id, String nombre, Categoria categoria, String description, Double precio, Restaurante restaurante, String urlImagen, Boolean activo, List<PedidoPlato> pedidoPlato) {
+        this.id = id;
+        this.nombre = nombre;
+        this.categoria = categoria;
+        this.description = description;
+        this.precio = precio;
+        this.restaurante = restaurante;
+        this.urlImagen = urlImagen;
+        this.activo = activo;
+        this.pedidoPlato = pedidoPlato;
     }
 
     public Long getId() {
@@ -83,5 +99,13 @@ public class Plato {
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
+    }
+
+    public List<PedidoPlato> getPedidoPlato() {
+        return pedidoPlato;
+    }
+
+    public void setPedidoPlato(List<PedidoPlato> pedidoPlato) {
+        this.pedidoPlato = pedidoPlato;
     }
 }

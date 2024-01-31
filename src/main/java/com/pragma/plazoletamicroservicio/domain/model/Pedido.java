@@ -1,31 +1,39 @@
 package com.pragma.plazoletamicroservicio.domain.model;
 
+import jakarta.validation.constraints.Min;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Pedido {
 
     private Long id;
 
+    @Min(value = 1 , message = "El id del propietario es requerido")
     private Long idCliente;
 
     private LocalDateTime fecha;
 
     private EstadoPedido estadoPedido;
 
+    @Min(value = 1 , message = "El id del propietario es requerido")
     private Long idChef;
 
     private Restaurante restaurante;
 
+    private List<PedidoPlato> pedidoPlatos;
+
     public Pedido() {
     }
 
-    public Pedido(Long id, Long idCliente, LocalDateTime fecha, EstadoPedido estadoPedido, Long idChef, Restaurante restaurante) {
+    public Pedido(Long id, Long idCliente, LocalDateTime fecha, EstadoPedido estadoPedido, Long idChef, Restaurante restaurante, List<PedidoPlato> pedidoPlatos) {
         this.id = id;
         this.idCliente = idCliente;
         this.fecha = fecha;
         this.estadoPedido = estadoPedido;
         this.idChef = idChef;
         this.restaurante = restaurante;
+        this.pedidoPlatos = pedidoPlatos;
     }
 
     public Long getId() {
@@ -74,5 +82,13 @@ public class Pedido {
 
     public void setRestaurante(Restaurante restaurante) {
         this.restaurante = restaurante;
+    }
+
+    public List<PedidoPlato> getPedidoPlatos() {
+        return pedidoPlatos;
+    }
+
+    public void setPedidoPlatos(List<PedidoPlato> pedidoPlatos) {
+        this.pedidoPlatos = pedidoPlatos;
     }
 }

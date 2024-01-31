@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Data
 @NoArgsConstructor
@@ -44,4 +46,6 @@ public class PlatoEntity {
 
     private Boolean activo = true;
 
+    @OneToMany(mappedBy = "platoEntity")
+    private List<PedidoPlatoEntity> platoPedidoEntities;
 }
