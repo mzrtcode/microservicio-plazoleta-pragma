@@ -84,8 +84,6 @@ public class PlatoHandlerImpl implements  IPlatoHandler{
         platoResponse.setLast(pagePlatos.isLast());
 
         return platoResponse;
-
-
     }
 
 

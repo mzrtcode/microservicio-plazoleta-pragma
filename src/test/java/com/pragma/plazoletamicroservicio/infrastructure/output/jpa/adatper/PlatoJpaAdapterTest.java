@@ -2,7 +2,9 @@ package com.pragma.plazoletamicroservicio.infrastructure.output.jpa.adatper;
 
 import com.pragma.plazoletamicroservicio.domain.exception.PlatoNoExiste;
 import com.pragma.plazoletamicroservicio.domain.model.Plato;
+import com.pragma.plazoletamicroservicio.domain.model.Restaurante;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.entity.PlatoEntity;
+import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.entity.RestauranteEntity;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.mapper.IPlatoEntityMapper;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.repository.IPlatoRepository;
 import org.hibernate.validator.constraints.ru.INN;
@@ -11,11 +13,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.parameters.P;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -67,21 +71,47 @@ class PlatoJpaAdapterTest {
         assertEquals(plato, resultado.get());
     }
 
+
     @Test
-    void getPlatosByRestauranteIdTest() {
-        Long id = 1L;
-        PlatoEntity platoEntity = new PlatoEntity();
-        Plato plato = new Plato();
-        List<PlatoEntity> platoEntityList = Arrays.asList(platoEntity);
-        List<Plato> platoList = Arrays.asList(plato);
+    void testGetPlatosByRestauranteId() {
+        // Datos de prueba
+        Long restauranteId = 1L;
+        Pageable pageable = PageRequest.of(0, 5);
 
-        when(platoRepository.findByRestauranteId(id)).thenReturn(platoEntityList);
-        when(platoEntityMapper.toPlatoList(platoEntityList)).thenReturn(platoList);
+        List<PlatoEntity> platoEntities = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            PlatoEntity entity = new PlatoEntity();
+            entity.setNombre("Plato" + i);
+            platoEntities.add(entity);
+        }
+        Page<PlatoEntity> entities = new PageImpl<>(platoEntities);
 
-        List<Plato> result = platoJpaAdapter.getPlatosByRestauranteId(id);
+        // Configurar el comportamiento del mock de platoRepository
+        when(platoRepository.findByRestauranteId(eq(restauranteId), eq(pageable)))
+                .thenReturn(entities);
 
-        verify(platoRepository, times(1)).findByRestauranteId(id);
-        verify(platoEntityMapper, times(1)).toPlatoList(platoEntityList);
-        assertEquals(platoList, result);
+        // Configurar el comportamiento del mock de platoEntityMapper
+        List<Plato> platoDTOMock = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Plato platoDTO = new Plato();
+            platoDTO.setNombre("Plato" + i);
+            platoDTOMock.add(platoDTO);
+        }
+        when(platoEntityMapper.toDto(any(PlatoEntity.class))).thenReturn(platoDTOMock.get(0));
+
+        // Llamar al método que queremos probar
+        Page<Plato> platos = platoJpaAdapter.getPlatosByRestauranteId(restauranteId, pageable);
+
+        // Verificar que se llamó al menos una vez al método findByRestauranteId en platoRepository
+        verify(platoRepository, times(1)).findByRestauranteId(eq(restauranteId), eq(pageable));
+
+        // Verificar el resultado
+        assertEquals(5, platos.getTotalElements());
+        assertEquals(5, platos.getContent().size());
+        // Añade más verificaciones según la estructura de tu respuesta
+
+        // Puedes verificar otras propiedades de la respuesta, por ejemplo:
+        assertEquals(pageable.getPageNumber(), platos.getNumber());
+        assertEquals(pageable.getPageSize(), platos.getSize());
     }
 }

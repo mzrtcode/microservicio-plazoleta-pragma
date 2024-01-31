@@ -2,6 +2,7 @@ package com.pragma.plazoletamicroservicio.application.handler;
 
 import com.pragma.plazoletamicroservicio.application.dto.PlatoDTO;
 import com.pragma.plazoletamicroservicio.application.dto.PlatoRequest;
+import com.pragma.plazoletamicroservicio.application.dto.PlatoResponse;
 import com.pragma.plazoletamicroservicio.application.mapper.IPlatoMapper;
 import com.pragma.plazoletamicroservicio.domain.api.IPlatoServicePort;
 import com.pragma.plazoletamicroservicio.domain.api.IRestauranteServicePort;
@@ -16,7 +17,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -107,21 +113,32 @@ class PlatoHandlerImplTest {
         assertEquals(plato.getDescription(), platoPersistido.getDescription());
     }
 
+
     @Test
-    void testGetPlatosByRestauranteId() {
-        // Datos de prueba
-        Long restauranteId = 1L;
-        List<Plato> platosMock = List.of(new Plato(/* Datos de prueba */));
-        List<PlatoDTO> platoDTOMock = Collections.singletonList(new PlatoDTO(/* Datos de prueba */));
+    public void testGetPlatosByRestauranteId() {
+        // Arrange
+        Long id = 1L;
+        int pageNo = 0;
+        int pageSize = 1;
+        Plato plato = new Plato();
+        PlatoDTO platoDTO = new PlatoDTO();
+        List<Plato> platoList = Collections.singletonList(plato);
+        List<PlatoDTO> platoDTOList = Collections.singletonList(platoDTO);
+        Page<Plato> pagePlatos = new PageImpl<>(platoList);
 
-        // Configurar el comportamiento del mock de platoServicePort
-        when(platoServicePort.getPlatosByRestauranteId(restauranteId)).thenReturn(platosMock);
+        when(platoServicePort.getPlatosByRestauranteId(id, PageRequest.of(pageNo, pageSize)))
+                .thenReturn(pagePlatos);
+        when(platoMapper.toPlatoDtoList(platoList)).thenReturn(platoDTOList);
 
-        // Llamar al método que queremos probar
-        List<PlatoDTO> result = platoHandler.getPlatosByRestauranteId(restauranteId);
+        // Act
+        PlatoResponse platoResponse = platoHandler.getPlatosByRestauranteId(id, pageNo, pageSize);
 
-        // Verificar que se llamó al menos una vez al método getPlatosByRestauranteId en platoServicePort
-        verify(platoServicePort, times(1)).getPlatosByRestauranteId(restauranteId);
-
+        // Assert
+        assertEquals(platoDTOList, platoResponse.getContent());
+        assertEquals(pageNo, platoResponse.getPageNo());
+        assertEquals(pageSize, platoResponse.getPageSize());
+        assertEquals(pagePlatos.getTotalElements(), platoResponse.getTotalElements());
+        assertEquals(pagePlatos.getTotalPages(), platoResponse.getTotalPages());
+        assertEquals(pagePlatos.isLast(), platoResponse.isLast());
     }
 }

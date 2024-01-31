@@ -8,8 +8,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -111,23 +116,24 @@ class PlatoUseCaseTest {
 
     }
 
+
     @Test
     public void testGetPlatosByRestauranteId() {
-        // Datos de prueba
-        Long restauranteId = 1L;
+        // Arrange
+        Long id = 1L;
+        Pageable pageable = PageRequest.of(0, 10);
+        Plato plato = new Plato();
+        List<Plato> platoList = Collections.singletonList(plato);
+        Page<Plato> pagePlatos = new PageImpl<>(platoList);
 
-        List<Plato> platos = new ArrayList<>(); // Agrega platos de prueba según tus necesidades
+        // Act
+        when(platoPersistencePort.getPlatosByRestauranteId(eq(id), any(Pageable.class))).thenReturn(pagePlatos);
+        Page<Plato> result = platoUseCase.getPlatosByRestauranteId(id, pageable);
 
-        // Configurar el comportamiento del mock de platoPersistencePort
-        when(platoPersistencePort.getPlatosByRestauranteId(restauranteId)).thenReturn(platos);
+        // Verify
+        verify(platoPersistencePort).getPlatosByRestauranteId(eq(id), any(Pageable.class));
 
-        // Llamar al método que queremos probar
-        List<Plato> result = platoUseCase.getPlatosByRestauranteId(restauranteId);
-
-        // Ejemplo de verificación
-        assertEquals(platos, result);
-
-        // Verificar que se llamó al menos una vez al método getPlatosByRestauranteId
-        verify(platoPersistencePort, times(1)).getPlatosByRestauranteId(restauranteId);
+        // Assert
+        assertEquals(pagePlatos, result);
     }
 }
