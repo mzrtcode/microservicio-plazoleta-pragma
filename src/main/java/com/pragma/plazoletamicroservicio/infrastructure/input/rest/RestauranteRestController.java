@@ -1,9 +1,11 @@
 package com.pragma.plazoletamicroservicio.infrastructure.input.rest;
 
+import com.pragma.plazoletamicroservicio.application.dto.PlatoResponse;
 import com.pragma.plazoletamicroservicio.application.dto.RestauranteRequest;
 import com.pragma.plazoletamicroservicio.application.dto.RestauranteDTO;
 import com.pragma.plazoletamicroservicio.application.dto.RestauranteResponse;
 import com.pragma.plazoletamicroservicio.application.exception.RestauranteInvalidException;
+import com.pragma.plazoletamicroservicio.application.handler.IPlatoHandler;
 import com.pragma.plazoletamicroservicio.application.handler.IRestauranteHandler;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -20,6 +22,8 @@ import java.util.List;
 public class RestauranteRestController {
 
     private final IRestauranteHandler restauranteHandler;
+    private final IPlatoHandler platoHandler;
+
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
@@ -35,5 +39,11 @@ public class RestauranteRestController {
 
         RestauranteResponse restaurantes = restauranteHandler.getAllRestaurantes(pageNo, pageSize);
         return ResponseEntity.ok(restaurantes);
+    }
+
+    @GetMapping("/{id}/platos")
+    public ResponseEntity<List<PlatoResponse>> getAllByRestauranteId(@PathVariable Long id){
+        List<PlatoResponse> platosList = platoHandler.getPlatosByRestauranteId(id);
+        return ResponseEntity.ok(platosList);
     }
 }

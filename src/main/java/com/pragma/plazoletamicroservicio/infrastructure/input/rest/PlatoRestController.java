@@ -32,15 +32,4 @@ public class PlatoRestController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<PlatoResponse>> getAllByRestauranteId(@PathVariable Long id){
-        List<PlatoResponse> platosList = platoHandler.getPlatosByRestauranteId(id);
-        return ResponseEntity.ok(platosList);
-    }
-
-
-
-
-
-
 }
