@@ -32,11 +32,20 @@ public class PedidoHandlerImpl implements IPedidoHandler {
     @Override
     public void crearPedidoInDB(PedidoRequest pedidoRequest) throws PedidoInvalidException, RestauranteNotFoundException, PlatoNoExiste {
 
+        // Extraer el id del usuario de la sesion actual
+        Long idClienteSesion = autenticacionService.obtenerUsuarioSesionActual().getId();
 
         // Validar que el Usuario existe y tiene el rol de EMPLEADO
         UsuarioDto usuarioChef = usuarioServicePort.getUsuarioPorId(pedidoRequest.getIdChef());
         if (!usuarioChef.getRol().name().equals("EMPLEADO")) {
             throw new PedidoInvalidException("El usuario no existe o el su rol no es EMPLEADO");
+        }
+
+        /* Validar que el cliente pueda realizar otro pedido solo si todos sus pedidos
+        anteriores se encuentran en el estado "ENTREGADO" o "CANCELADO". */
+        List<EstadoPedido> estados = Arrays.asList(EstadoPedido.PENDIENTE, EstadoPedido.EN_PREPARACION, EstadoPedido.LISTO);
+        if(pedidoServicePort.existsByIdClienteAndEstadoPedidoIn(idClienteSesion,estados)){
+            throw new PedidoInvalidException("No puedes crear un nuevo pedido mientras tienes uno en 'PENDIENTE', 'PREPARACION' o 'LISTO'");
         }
 
         // Traer el Restaurante por el ID
@@ -74,15 +83,10 @@ public class PedidoHandlerImpl implements IPedidoHandler {
                 throw new PedidoInvalidException("El plato " + idPlato + " no pertenece al restaurante " + platoRestauranteId);
             }
 
-
         }
 
 
 
-        /* Validar que el cliente pueda realizar otro pedido solo si todos sus pedidos
-        anteriores se encuentran en el estado "ENTREGADO" o "CANCELADO". */
-
-        Long idClienteSesion = autenticacionService.obtenerUsuarioSesionActual().getId();
 
         // 1 Creamos el pedido en la base de datos
         Pedido pedido = new Pedido();
