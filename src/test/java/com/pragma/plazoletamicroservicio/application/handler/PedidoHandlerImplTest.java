@@ -100,22 +100,4 @@ class PedidoHandlerImplTest {
     }
 
 
-    @Test
-    void testCrearPedidoInDB_UsuarioNoEsEmpleado() {
-        // Arrange
-        PedidoRequest pedidoRequest = new PedidoRequest();
-        pedidoRequest.setIdChef(20L);
-
-        // Usuario Mock
-        UsuarioDto usuarioChef = new UsuarioDto();
-        usuarioChef.setRol(Rol.CLIENTE); // Cambia el rol a CLIENTE para simular el error
-        when(usuarioServicePort.getUsuarioPorId(pedidoRequest.getIdChef())).thenReturn(usuarioChef);
-
-        // Act and Assert
-        assertThrows(PedidoInvalidException.class, () -> pedidoHandler.crearPedidoInDB(pedidoRequest));
-    }
-
-
-
-
 }

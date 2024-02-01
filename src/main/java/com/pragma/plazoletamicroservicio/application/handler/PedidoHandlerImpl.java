@@ -35,7 +35,7 @@ public class PedidoHandlerImpl implements IPedidoHandler {
         // Extraer el id del usuario de la sesion actual
         Long idClienteSesion = autenticacionService.obtenerUsuarioSesionActual().getId();
 
-        // Validar que el Usuario existe y tiene el rol de EMPLEADO
+        // Validar que el idChef existe y tiene el rol de EMPLEADO
         UsuarioDto usuarioChef = usuarioServicePort.getUsuarioPorId(pedidoRequest.getIdChef());
         if (!usuarioChef.getRol().name().equals("EMPLEADO")) {
             throw new PedidoInvalidException("El usuario no existe o el su rol no es EMPLEADO");

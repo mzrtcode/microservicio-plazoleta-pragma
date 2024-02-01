@@ -38,7 +38,4 @@ public class PedidoEntity {
     @JoinColumn(name = "id_restaurante")
     private RestauranteEntity restaurante;
 
-    @OneToMany(mappedBy = "pedidoEntity", fetch = FetchType.EAGER)
-    private List<PedidoPlatoEntity> pedidoPlatoEntity;
-
 }
