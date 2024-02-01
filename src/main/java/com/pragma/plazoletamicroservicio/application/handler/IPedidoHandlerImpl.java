@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class PedidoHandlerImpl implements PedidoHandler{
+public class IPedidoHandlerImpl implements IPedidoHandler {
 
     private final IUsuarioServicePort usuarioServicePort;
     private final IPlatoServicePort platoServicePort;
@@ -60,7 +60,7 @@ public class PedidoHandlerImpl implements PedidoHandler{
             }
 
             //Validar que la cantidad de los platos sea >= 1
-            if(platoPedido.getCantidad() >= 1){
+            if(!(platoPedido.getCantidad() >= 1)){
                 throw new PedidoInvalidException("La cantidad de platos por pedido debe ser mayor que 0");
             }
         }
@@ -85,7 +85,6 @@ public class PedidoHandlerImpl implements PedidoHandler{
 
         // 3 Con el id del pedido creado por cada plato entonces creamos un registro en PEDIDOS_PLATOS
         // iteramos los id de los platos y en todos colocamos el id del pedido al que pertenecen
-        // pedidoPlatoServicePort
         for(ListaPlatosPedido platoPedido: listaPlatosPedido){
             Optional<Plato> platoOptional = platoServicePort.obtenerPlatoPorId(platoPedido.getIdPlato());
 

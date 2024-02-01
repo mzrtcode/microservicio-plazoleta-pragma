@@ -10,10 +10,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ResponseEntityExceptionHandler {
 
-     @ExceptionHandler(PlatoNoExiste.class)
-    public ResponseEntity<ErrorMessage> platoNoExisteHandler(PlatoNoExiste ex){
-         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-         ErrorMessage errorMessage = new ErrorMessage(httpStatus, ex.getMessage());
-         return ResponseEntity.status(httpStatus).body(errorMessage);
-     }
+    @ExceptionHandler(PlatoNoExiste.class)
+    public ResponseEntity<ErrorMessage> platoNoExisteHandler(PlatoNoExiste ex) {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        ErrorMessage errorMessage = new ErrorMessage(httpStatus, ex.getMessage());
+        return ResponseEntity.status(httpStatus).body(errorMessage);
+    }
+
+    @ExceptionHandler(PedidoInvalidException.class)
+    public ResponseEntity<ErrorMessage> pedidoInvalidExceptionHandler(PedidoInvalidException ex){
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        ErrorMessage errorMessage = new ErrorMessage(httpStatus, ex.getMessage());
+        return ResponseEntity.status(httpStatus).body(errorMessage);
+    }
 }

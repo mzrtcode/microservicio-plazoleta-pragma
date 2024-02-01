@@ -5,7 +5,7 @@ import com.pragma.plazoletamicroservicio.application.exception.PedidoInvalidExce
 import com.pragma.plazoletamicroservicio.domain.exception.PlatoNoExiste;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.exception.RestauranteNotFoundException;
 
-public interface PedidoHandler {
+public interface IPedidoHandler {
 
     void crearPedidoInDB(PedidoRequest pedidoRequest) throws PedidoInvalidException, RestauranteNotFoundException, PlatoNoExiste;
 }
