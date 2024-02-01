@@ -13,4 +13,7 @@ public interface IPedidoPersistencePort {
 
     boolean existsByIdClienteAndEstadoPedidoIn(Long idCliente, List<EstadoPedido> estados);
 
+
+
+
 }

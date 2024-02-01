@@ -27,4 +27,5 @@ public class PedidoJpaAdapter implements IPedidoPersistencePort {
     public boolean existsByIdClienteAndEstadoPedidoIn(Long idCliente, List<EstadoPedido> estados) {
         return pedidoRepository.existsByIdClienteAndEstadoPedidoIn(idCliente, estados);
     }
+
 }

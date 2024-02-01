@@ -24,4 +24,6 @@ public class PedidoUseCase implements IPedidoServicePort {
         return pedidoPersistencePort.existsByIdClienteAndEstadoPedidoIn(idCliente, estados);
     }
 
+
+
 }
