@@ -7,6 +7,8 @@ import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.entity.Pedido
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.mapper.IPedidoEntityMapper;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.repository.IPedidoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +28,12 @@ public class PedidoJpaAdapter implements IPedidoPersistencePort {
     @Override
     public boolean existsByIdClienteAndEstadoPedidoIn(Long idCliente, List<EstadoPedido> estados) {
         return pedidoRepository.existsByIdClienteAndEstadoPedidoIn(idCliente, estados);
+    }
+
+    @Override
+    public Page<Pedido> findByEstadoPedidoAndIdChef(Long idChef, EstadoPedido estadoPedido, Pageable pageable) {
+        Page<PedidoEntity> entities = pedidoRepository.findByEstadoPedidoAndIdChef(idChef, estadoPedido, pageable);
+        return  entities.map(pedidoMapper::toPedido);
     }
 
 }

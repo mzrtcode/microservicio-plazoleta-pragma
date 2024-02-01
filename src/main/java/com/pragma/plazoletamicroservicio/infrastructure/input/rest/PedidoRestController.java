@@ -1,6 +1,7 @@
 package com.pragma.plazoletamicroservicio.infrastructure.input.rest;
 
 import com.pragma.plazoletamicroservicio.application.dto.PedidoRequest;
+import com.pragma.plazoletamicroservicio.application.dto.PedidoResponse;
 import com.pragma.plazoletamicroservicio.application.exception.PedidoInvalidException;
 import com.pragma.plazoletamicroservicio.application.handler.IPedidoHandler;
 import com.pragma.plazoletamicroservicio.application.handler.IPedidoPlatoHandlerImpl;
@@ -26,8 +27,6 @@ import java.util.List;
 public class PedidoRestController {
 
     private final IPedidoHandler pedidoHandler;
-    //NUEVO
-    private final IPedidoRepository pedidoRepository;
     private final AutenticacionService autenticacionService;
 
 
@@ -40,15 +39,16 @@ public class PedidoRestController {
     //NUEVO
     @GetMapping
     @PreAuthorize("hasAuthority('EMPLEADO')")
-    public List<PedidoEntity>  listarPedidosPorEstado(
-            @RequestParam(value = "estado", defaultValue = "", required = false) EstadoPedido estadoPedido)
-    {
-        System.out.println("TU ROL ES: " + autenticacionService.obtenerUsuarioSesionActual().getAuthorities());
+    public PedidoResponse listarPedidosPorEstado(
+            @RequestParam(value = "estado", defaultValue = "", required = true) EstadoPedido estadoPedido,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize){
+
         Long idUsuarioActual = autenticacionService.obtenerUsuarioSesionActual().getId();
-        List<GrantedAuthority> authorities = autenticacionService.obtenerUsuarioSesionActual().getAuthorities();
 
 
-        return pedidoRepository.findByEstadoPedidoAndIdChef(idUsuarioActual, estadoPedido);
+        return pedidoHandler.findByEstadoPedidoAndIdChef(estadoPedido, idUsuarioActual, pageNo, pageSize);
+
     }
 
 }

@@ -1,6 +1,7 @@
 package com.pragma.plazoletamicroservicio.application.handler;
 
 import com.pragma.plazoletamicroservicio.application.dto.PedidoRequest;
+import com.pragma.plazoletamicroservicio.application.dto.PedidoResponse;
 import com.pragma.plazoletamicroservicio.application.exception.PedidoInvalidException;
 import com.pragma.plazoletamicroservicio.domain.exception.PlatoNoExiste;
 import com.pragma.plazoletamicroservicio.domain.model.EstadoPedido;
@@ -11,5 +12,6 @@ import java.util.List;
 public interface IPedidoHandler {
 
     void crearPedidoInDB(PedidoRequest pedidoRequest) throws PedidoInvalidException, RestauranteNotFoundException, PlatoNoExiste;
+    PedidoResponse findByEstadoPedidoAndIdChef(EstadoPedido estadoPedido, Long idUsuario, int pageNo, int pageSize);
 
 }

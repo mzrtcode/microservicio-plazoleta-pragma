@@ -1,8 +1,8 @@
 package com.pragma.plazoletamicroservicio.application.handler;
 
-import com.pragma.plazoletamicroservicio.application.dto.ListaPlatosPedido;
-import com.pragma.plazoletamicroservicio.application.dto.PedidoRequest;
+import com.pragma.plazoletamicroservicio.application.dto.*;
 import com.pragma.plazoletamicroservicio.application.exception.PedidoInvalidException;
+import com.pragma.plazoletamicroservicio.application.mapper.IPedidoMapper;
 import com.pragma.plazoletamicroservicio.domain.api.*;
 import com.pragma.plazoletamicroservicio.domain.exception.PlatoNoExiste;
 import com.pragma.plazoletamicroservicio.domain.model.*;
@@ -11,6 +11,9 @@ import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.entity.Pedido
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.exception.RestauranteNotFoundException;
 import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.AutenticacionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +31,7 @@ public class PedidoHandlerImpl implements IPedidoHandler {
     private final IPedidoServicePort pedidoServicePort;
     private final IPedidoPlatoServicePort pedidoPlatoServicePort;
     private final AutenticacionService autenticacionService;
+    private final IPedidoMapper pedidoMapper;
 
     @Override
     public void crearPedidoInDB(PedidoRequest pedidoRequest) throws PedidoInvalidException, RestauranteNotFoundException, PlatoNoExiste {
@@ -114,6 +118,25 @@ public class PedidoHandlerImpl implements IPedidoHandler {
             pedidoPlatoServicePort.savePedidoPlato(pedidoPlato);
         }
 
+    }
+
+    @Override
+    public PedidoResponse findByEstadoPedidoAndIdChef(EstadoPedido estadoPedido, Long idUsuario, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        Page<Pedido> pagePedidos = pedidoServicePort.findByEstadoPedidoAndIdChef(idUsuario, estadoPedido, pageable);
+        List<Pedido> pedidosList = pagePedidos.getContent();
+
+        List<PedidoDto> content = pedidoMapper.toPedidoDtoList(pedidosList);
+        PedidoResponse pedidoResponse = new PedidoResponse();
+        pedidoResponse.setContent(content);
+        pedidoResponse.setPageNo(pagePedidos.getNumber());
+        pedidoResponse.setPageSize(pagePedidos.getSize());
+        pedidoResponse.setTotalElements(pagePedidos.getTotalElements());
+        pedidoResponse.setTotalPages(pagePedidos.getTotalPages());
+        pedidoResponse.setLast(pagePedidos.isLast());
+
+        return pedidoResponse;
     }
 
 

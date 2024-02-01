@@ -6,6 +6,8 @@ import com.pragma.plazoletamicroservicio.domain.model.Pedido;
 import com.pragma.plazoletamicroservicio.domain.spi.IPedidoPersistencePort;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.entity.PedidoEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -24,6 +26,10 @@ public class PedidoUseCase implements IPedidoServicePort {
         return pedidoPersistencePort.existsByIdClienteAndEstadoPedidoIn(idCliente, estados);
     }
 
+    @Override
+    public Page<Pedido> findByEstadoPedidoAndIdChef(Long idChef, EstadoPedido estadoPedido, Pageable pageable) {
+        return pedidoPersistencePort.findByEstadoPedidoAndIdChef(idChef, estadoPedido, pageable);
+    }
 
 
 }
