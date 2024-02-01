@@ -12,12 +12,14 @@ import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.exception.Res
 import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.AutenticacionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PedidoHandlerImpl implements IPedidoHandler {
 
     private final IUsuarioServicePort usuarioServicePort;
@@ -80,10 +82,11 @@ public class PedidoHandlerImpl implements IPedidoHandler {
         /* Validar que el cliente pueda realizar otro pedido solo si todos sus pedidos
         anteriores se encuentran en el estado "ENTREGADO" o "CANCELADO". */
 
+        Long idClienteSesion = autenticacionService.obtenerUsuarioSesionActual().getId();
 
         // 1 Creamos el pedido en la base de datos
         Pedido pedido = new Pedido();
-        pedido.setIdCliente(autenticacionService.obtenerUsuarioSesionActual().getId());
+        pedido.setIdCliente(idClienteSesion);
         pedido.setIdChef(pedidoRequest.getIdChef());
         pedido.setFecha(LocalDateTime.now());
         pedido.setEstadoPedido(EstadoPedido.PENDIENTE);
@@ -107,7 +110,7 @@ public class PedidoHandlerImpl implements IPedidoHandler {
             pedidoPlatoServicePort.savePedidoPlato(pedidoPlato);
         }
 
-/* Validar que el cliente pueda realizar otro pedido solo si todos sus pedidos
-        anteriores se encuentran en el estado "ENTREGADO" o "CANCELADO". */
     }
+
+
 }

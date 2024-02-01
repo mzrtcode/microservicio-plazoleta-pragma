@@ -61,6 +61,7 @@ class PedidoHandlerImplTest {
 
         // Restaurante Mock
         Restaurante restaurante = new Restaurante();
+        restaurante.setId(pedidoRequest.getRestauranteId());
         when(restauranteServicePort.getRestauranteById(pedidoRequest.getRestauranteId())).thenReturn(restaurante);
 
         // Plato Mock
@@ -72,6 +73,13 @@ class PedidoHandlerImplTest {
 
         pedidoRequest.setListaPlatosPedido(listaPlatosPedido);
 
+        Plato plato = new Plato();
+        Restaurante platoRestaurante = new Restaurante();
+        platoRestaurante.setId(pedidoRequest.getRestauranteId());
+        plato.setRestaurante(platoRestaurante);
+
+        when(platoServicePort.obtenerPlatoPorId(platoPedido.getIdPlato())).thenReturn(Optional.of(plato));
+
         // Pedido Mock
         Pedido pedido = new Pedido();
         pedido.setId(2L);
@@ -80,10 +88,6 @@ class PedidoHandlerImplTest {
         when(platoServicePort.platoExistsById(1L)).thenReturn(true);
         when(autenticacionService.obtenerUsuarioSesionActual()).thenReturn(new UsuarioAutenticado());
         when(pedidoServicePort.savePedido(any())).thenReturn(pedidoEntity);
-
-        // Simular un escenario en el que obtenerPlatoPorId devuelve un Optional vacío
-        when(platoServicePort.obtenerPlatoPorId(platoPedido.getIdPlato())).thenReturn(Optional.of(new Plato()));
-
 
         // Act
         pedidoHandler.crearPedidoInDB(pedidoRequest);
@@ -94,6 +98,7 @@ class PedidoHandlerImplTest {
         // Assert
         verify(pedidoServicePort, times(1)).savePedido(any());
     }
+
 
     @Test
     void testCrearPedidoInDB_UsuarioNoEsEmpleado() {
