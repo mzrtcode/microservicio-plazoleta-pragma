@@ -114,4 +114,19 @@ class PlatoJpaAdapterTest {
         assertEquals(pageable.getPageNumber(), platos.getNumber());
         assertEquals(pageable.getPageSize(), platos.getSize());
     }
+
+    @Test
+    void testPlatoExistsById() {
+        // Arrange
+        Long platoId = 1L;
+
+        when(platoRepository.existsById(platoId)).thenReturn(true);
+
+        // Act
+        boolean result = platoJpaAdapter.platoExistsById(platoId);
+
+        // Assert
+        assertTrue(result);
+        verify(platoRepository, times(1)).existsById(platoId);
+    }
 }

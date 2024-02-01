@@ -18,15 +18,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class IPedidoHandlerImplTest {
+class PedidoHandlerImplTest {
 
     @Mock
     private IUsuarioServicePort usuarioServicePort;
@@ -45,7 +45,7 @@ class IPedidoHandlerImplTest {
     private AutenticacionService autenticacionService;
 
     @InjectMocks
-    private IPedidoHandlerImpl pedidoHandler;
+    private PedidoHandlerImpl pedidoHandler;
 
     @Test
     void testCrearPedidoInDB() throws PlatoNoExiste, RestauranteNotFoundException, PedidoInvalidException {
@@ -94,6 +94,22 @@ class IPedidoHandlerImplTest {
         // Assert
         verify(pedidoServicePort, times(1)).savePedido(any());
     }
+
+    @Test
+    void testCrearPedidoInDB_UsuarioNoEsEmpleado() {
+        // Arrange
+        PedidoRequest pedidoRequest = new PedidoRequest();
+        pedidoRequest.setIdChef(20L);
+
+        // Usuario Mock
+        UsuarioDto usuarioChef = new UsuarioDto();
+        usuarioChef.setRol(Rol.CLIENTE); // Cambia el rol a CLIENTE para simular el error
+        when(usuarioServicePort.getUsuarioPorId(pedidoRequest.getIdChef())).thenReturn(usuarioChef);
+
+        // Act and Assert
+        assertThrows(PedidoInvalidException.class, () -> pedidoHandler.crearPedidoInDB(pedidoRequest));
+    }
+
 
 
 

@@ -141,4 +141,11 @@ class PlatoHandlerImplTest {
         assertEquals(pagePlatos.getTotalPages(), platoResponse.getTotalPages());
         assertEquals(pagePlatos.isLast(), platoResponse.isLast());
     }
+
+    @Test
+    public void testPlatoExistsById() {
+        Long id = 1L;
+        platoServicePort.platoExistsById(id);
+        verify(platoServicePort, times(1)).platoExistsById(id);
+    }
 }

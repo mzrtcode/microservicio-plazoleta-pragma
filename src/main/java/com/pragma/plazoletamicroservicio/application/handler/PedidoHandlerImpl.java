@@ -3,7 +3,6 @@ package com.pragma.plazoletamicroservicio.application.handler;
 import com.pragma.plazoletamicroservicio.application.dto.ListaPlatosPedido;
 import com.pragma.plazoletamicroservicio.application.dto.PedidoRequest;
 import com.pragma.plazoletamicroservicio.application.exception.PedidoInvalidException;
-import com.pragma.plazoletamicroservicio.application.mapper.IPedidoMapper;
 import com.pragma.plazoletamicroservicio.domain.api.*;
 import com.pragma.plazoletamicroservicio.domain.exception.PlatoNoExiste;
 import com.pragma.plazoletamicroservicio.domain.model.*;
@@ -22,7 +21,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class IPedidoHandlerImpl implements IPedidoHandler {
+public class PedidoHandlerImpl implements IPedidoHandler {
 
     private final IUsuarioServicePort usuarioServicePort;
     private final IPlatoServicePort platoServicePort;
@@ -47,7 +46,7 @@ public class IPedidoHandlerImpl implements IPedidoHandler {
         // Verificar que el pedido tenga al menos un plato
         List<ListaPlatosPedido> listaPlatosPedido = pedidoRequest.getListaPlatosPedido();
         if(listaPlatosPedido.isEmpty()) {
-            throw new PedidoInvalidException("El pedido debe almenos tener un plato");
+            throw new PedidoInvalidException("El pedido debe al menos tener un plato");
         }
 
         // Validar que los IDs de platos no se repitan
