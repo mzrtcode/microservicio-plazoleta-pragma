@@ -136,4 +136,16 @@ class PlatoUseCaseTest {
         // Assert
         assertEquals(pagePlatos, result);
     }
+
+    @Test
+    void platoExistsById() {
+
+        Long platoId = 2l;
+
+        // ACT
+        platoUseCase.platoExistsById(platoId);
+
+        // ASSERT
+        verify(platoPersistencePort, times(1)).platoExistsById(platoId);
+    }
 }

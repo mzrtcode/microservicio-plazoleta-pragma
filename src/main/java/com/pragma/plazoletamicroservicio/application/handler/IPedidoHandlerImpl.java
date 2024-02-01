@@ -15,8 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -27,41 +29,45 @@ public class IPedidoHandlerImpl implements IPedidoHandler {
     private final IRestauranteServicePort restauranteServicePort;
     private final IPedidoServicePort pedidoServicePort;
     private final IPedidoPlatoServicePort pedidoPlatoServicePort;
-    private final IPedidoMapper pedidoMapper;
     private final AutenticacionService autenticacionService;
 
     @Override
     public void crearPedidoInDB(PedidoRequest pedidoRequest) throws PedidoInvalidException, RestauranteNotFoundException, PlatoNoExiste {
 
 
-
         // Validar que el Usuario existe y tiene el rol de EMPLEADO
         UsuarioDto usuarioChef = usuarioServicePort.getUsuarioPorId(pedidoRequest.getIdChef());
         if(!usuarioChef.getRol().name().equals("EMPLEADO")) {
-            throw  new PedidoInvalidException("El usuario no existe o el Rol no se EMPLEADO");
+            throw  new PedidoInvalidException("El usuario no existe o el su rol no es EMPLEADO");
         }
 
-        //Traer el Restaurante por el ID
+        // Traer el Restaurante por el ID
         Restaurante restaurante = restauranteServicePort.getRestauranteById(pedidoRequest.getRestauranteId());
 
-        //Verificar que el pedido tenga almenos un plato
+        // Verificar que el pedido tenga al menos un plato
         List<ListaPlatosPedido> listaPlatosPedido = pedidoRequest.getListaPlatosPedido();
         if(listaPlatosPedido.isEmpty()) {
             throw new PedidoInvalidException("El pedido debe almenos tener un plato");
         }
 
-        // Validaciones para los platos
-        for(ListaPlatosPedido platoPedido: listaPlatosPedido){
+        // Validar que los IDs de platos no se repitan
+        Set<Long> idPlatosSet = new HashSet<>();
+        for (ListaPlatosPedido platoPedido : listaPlatosPedido) {
             Long idPlato = platoPedido.getIdPlato();
 
             // Validar que cada plato exista
-            if(!platoServicePort.platoExistsById(idPlato)){
-                throw new PedidoInvalidException("El plato con id: " + idPlato + "no existe");
+            if (!platoServicePort.platoExistsById(idPlato)) {
+                throw new PedidoInvalidException("El plato con id: " + idPlato + " no existe");
             }
 
-            //Validar que la cantidad de los platos sea >= 1
-            if(!(platoPedido.getCantidad() >= 1)){
+            // Validar que la cantidad de los platos sea >= 1
+            if (!(platoPedido.getCantidad() >= 1)) {
                 throw new PedidoInvalidException("La cantidad de platos por pedido debe ser mayor que 0");
+            }
+
+            // Validar que el ID del plato no se repita
+            if (!idPlatosSet.add(idPlato)) {
+                throw new PedidoInvalidException("El ID del plato se repite en la lista");
             }
         }
 
