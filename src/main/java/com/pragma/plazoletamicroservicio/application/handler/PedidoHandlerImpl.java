@@ -14,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,8 +33,8 @@ public class PedidoHandlerImpl implements IPedidoHandler {
 
         // Validar que el Usuario existe y tiene el rol de EMPLEADO
         UsuarioDto usuarioChef = usuarioServicePort.getUsuarioPorId(pedidoRequest.getIdChef());
-        if(!usuarioChef.getRol().name().equals("EMPLEADO")) {
-            throw  new PedidoInvalidException("El usuario no existe o el su rol no es EMPLEADO");
+        if (!usuarioChef.getRol().name().equals("EMPLEADO")) {
+            throw new PedidoInvalidException("El usuario no existe o el su rol no es EMPLEADO");
         }
 
         // Traer el Restaurante por el ID
@@ -45,7 +42,7 @@ public class PedidoHandlerImpl implements IPedidoHandler {
 
         // Verificar que el pedido tenga al menos un plato
         List<ListaPlatosPedido> listaPlatosPedido = pedidoRequest.getListaPlatosPedido();
-        if(listaPlatosPedido.isEmpty()) {
+        if (listaPlatosPedido.isEmpty()) {
             throw new PedidoInvalidException("El pedido debe al menos tener un plato");
         }
 
@@ -68,8 +65,20 @@ public class PedidoHandlerImpl implements IPedidoHandler {
             if (!idPlatosSet.add(idPlato)) {
                 throw new PedidoInvalidException("El ID del plato se repite en la lista");
             }
+
+            // Validar que los platos pertenezcan al mismo restaurante que el restaurante del pedido
+            Long platoRestauranteId = platoServicePort.obtenerPlatoPorId(idPlato).get().getRestaurante().getId();
+            if (!Objects.equals(platoRestauranteId, pedidoRequest.getRestauranteId())) {
+                throw new PedidoInvalidException("El plato " + idPlato + " no pertenece al restaurante " + platoRestauranteId);
+            }
+
+
         }
 
+
+
+        /* Validar que el cliente pueda realizar otro pedido solo si todos sus pedidos
+        anteriores se encuentran en el estado "ENTREGADO" o "CANCELADO". */
 
 
         // 1 Creamos el pedido en la base de datos
@@ -84,24 +93,21 @@ public class PedidoHandlerImpl implements IPedidoHandler {
         pedido.setId(pedidoEntity.getId());
 
 
-        // 2 Una vez creado el pedido le sacamos el id al pedido creado
-        Long idPedido = pedidoEntity.getId();
 
+        /* 2 Con el id del pedido creado por cada plato entonces creamos un registro en PEDIDOS_PLATOS
+        iteramos los id de los platos y en todos colocamos el id del pedido al que pertenecen */
 
-        // 3 Con el id del pedido creado por cada plato entonces creamos un registro en PEDIDOS_PLATOS
-        // iteramos los id de los platos y en todos colocamos el id del pedido al que pertenecen
-        for(ListaPlatosPedido platoPedido: listaPlatosPedido){
+        for (ListaPlatosPedido platoPedido : listaPlatosPedido) {
             Optional<Plato> platoOptional = platoServicePort.obtenerPlatoPorId(platoPedido.getIdPlato());
-
 
             PedidoPlato pedidoPlato = new PedidoPlato();
             pedidoPlato.setPedido(pedido);
             pedidoPlato.setPlato(platoOptional.get());
             pedidoPlato.setCantidad(platoPedido.getCantidad());
-
             pedidoPlatoServicePort.savePedidoPlato(pedidoPlato);
         }
 
-
+/* Validar que el cliente pueda realizar otro pedido solo si todos sus pedidos
+        anteriores se encuentran en el estado "ENTREGADO" o "CANCELADO". */
     }
 }
