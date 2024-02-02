@@ -8,6 +8,8 @@ import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.repository.IP
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class PedidoPlatoJpaAdapter implements IPedidoPlatoPersistencePort {
@@ -21,4 +23,13 @@ public class PedidoPlatoJpaAdapter implements IPedidoPlatoPersistencePort {
         PedidoPlatoEntity pedidoPlatoEntity = pedidoPlatoMapper.toPedidoPlatoEntity(pedidoPlato);
            return pedidoPlatoRepository.save(pedidoPlatoEntity);
     }
+
+    @Override
+    public List<PedidoPlato> findByPedidoEntityId(Long idPedido) {
+        List<PedidoPlatoEntity> pedidoPlatoList = pedidoPlatoRepository.findByPedidoEntityId(idPedido);
+        List<PedidoPlato> pedidoPlato = pedidoPlatoMapper.toPedidoPlato(pedidoPlatoList);
+        return pedidoPlato;
+    }
+
+
 }

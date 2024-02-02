@@ -35,6 +35,7 @@ public class PedidoHandlerImpl implements IPedidoHandler {
     private final IPedidoMapper pedidoMapper;
     private final IEmpleadoRestauranteServicePort empleadoRestauranteServicePort;
 
+
     @Override
     public void crearPedidoInDB(PedidoRequest pedidoRequest) throws PedidoInvalidException, RestauranteNotFoundException, PlatoNoExiste {
 
@@ -138,9 +139,25 @@ public class PedidoHandlerImpl implements IPedidoHandler {
 
         Long idRestaurante = restaurante.get().getRestaurante().getId();
         Page<Pedido> pagePedidos = pedidoServicePort.listarPedidosPorRestauranteEmpleado(idRestaurante, estadoPedido, pageable);
+
         List<Pedido> pedidosList = pagePedidos.getContent();
 
+
         List<PedidoDto> content = pedidoMapper.toPedidoDtoList(pedidosList);
+        content.forEach(itemPedido -> {
+           Long idPedido = itemPedido.getId();
+            List<PedidoPlato> listaPedidoPlatos = pedidoPlatoServicePort.findByPedidoEntityId(idPedido);
+            List<Plato> listaPlatos = new ArrayList<Plato>();
+            itemPedido.setPlatos(listaPlatos);
+
+            listaPedidoPlatos.forEach(itemPedidoPlato -> {
+                Plato plato = itemPedidoPlato.getPlato();
+                System.out.println(plato);
+                listaPlatos.add(plato);
+            });
+
+        });
+
         PedidoResponse pedidoResponse = new PedidoResponse();
         pedidoResponse.setContent(content);
         pedidoResponse.setPageNo(pagePedidos.getNumber());

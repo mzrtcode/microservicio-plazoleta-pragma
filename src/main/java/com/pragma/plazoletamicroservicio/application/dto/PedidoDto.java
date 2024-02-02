@@ -1,12 +1,14 @@
 package com.pragma.plazoletamicroservicio.application.dto;
 
 import com.pragma.plazoletamicroservicio.domain.model.EstadoPedido;
+import com.pragma.plazoletamicroservicio.domain.model.Plato;
 import com.pragma.plazoletamicroservicio.domain.model.Restaurante;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,5 +24,6 @@ public class PedidoDto {
 
     private Long idChef;
 
-    private Restaurante restaurante;
+    private List<Plato> platos;
+
 }

@@ -20,8 +20,6 @@ public class PlatoDTO {
 
     private Double precio;
 
-    private Restaurante restaurante;
-
     private String urlImagen;
 
     private Boolean activo;
