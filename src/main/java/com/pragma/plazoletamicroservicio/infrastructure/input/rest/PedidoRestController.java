@@ -12,6 +12,7 @@ import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.Autenticaci
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ public class PedidoRestController {
     }
 
     @PutMapping("/{pedidoId}")
-    public void actualizarPedido(@PathVariable("id") Long pedidoId, @RequestBody ActualizarPedidoRequest actualizarPedidoRequest) throws PedidoInvalidException {
+    public void actualizarPedido(@PathVariable("pedidoId") Long pedidoId, @RequestBody ActualizarPedidoRequest actualizarPedidoRequest) throws PedidoInvalidException {
         pedidoHandler.actualizarPedido(pedidoId, actualizarPedidoRequest);
     }
 

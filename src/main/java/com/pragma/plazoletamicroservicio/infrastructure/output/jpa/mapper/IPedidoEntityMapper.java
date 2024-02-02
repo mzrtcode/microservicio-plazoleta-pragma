@@ -17,5 +17,8 @@ public interface IPedidoEntityMapper {
     PedidoEntity toPedidoEntity(Pedido pedido);
     Pedido toPedido (PedidoEntity pedidoEntity);
 
-    Optional<Pedido> toPedido(Optional<PedidoEntity> pedidoEntityOptional);
+  
+    default Optional<Pedido> toPedido(Optional<PedidoEntity> pedidoEntityOptional) {
+        return pedidoEntityOptional.map(this::toPedido);
+    }
 }

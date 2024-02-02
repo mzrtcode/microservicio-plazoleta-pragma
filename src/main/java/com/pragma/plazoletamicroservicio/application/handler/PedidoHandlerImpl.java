@@ -186,7 +186,12 @@ public class PedidoHandlerImpl implements IPedidoHandler {
         Long idUsuarioSesion = autenticacionService.obtenerUsuarioSesionActual().getId();
 
         // VALIDAR QUE EL PEDIDO EXISTA
-        Optional<Pedido> pedidoOptional = pedidoServicePort.obtenerPedidoPorId(idPedido);
+        //Optional<Pedido> pedidoOptional = pedidoServicePort.obtenerPedidoPorId(idPedido);
+
+        Pedido pedidoC = new Pedido();
+        pedidoC.setEstadoPedido(EstadoPedido.PENDIENTE);
+        Optional<Pedido> pedidoOptional = Optional.of(pedidoC);
+
         if(pedidoOptional.isEmpty()) throw new PedidoInvalidException("El id de pedido no existe");
 
 
@@ -200,20 +205,21 @@ public class PedidoHandlerImpl implements IPedidoHandler {
             if (actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.EN_PREPARACION
                     && pedido.getEstadoPedido() == EstadoPedido.PENDIENTE) {
 
-                System.out.println("EFECTIVAMENTE PUEDES CAMBIAR DE PREPRACION A PENDIENTE");
+                pedido.setEstadoPedido(EstadoPedido.PENDIENTE);
+                pedido.setIdEmpleadoAsignado(idUsuarioSesion);
             }
 
 
 
             // SOLO SE PUEDE CAMBIAR A LISTO SI ESTA EN PEDIENTE
-            if(actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.LISTO
+            else if(actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.LISTO
                     && pedido.getEstadoPedido() == EstadoPedido.PENDIENTE){
                 System.out.println("EFECTIVAMENTE PUEDES CAMBIAR DE PEDIENTE A LISTO");
             }
 
             // SOLO SE PUEDE CAMBIAR A ENTREGADO SI ESTA LISTO
 
-            if(actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.ENTREGADO
+            else if(actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.ENTREGADO
                     && pedido.getEstadoPedido() == EstadoPedido.LISTO){
                 System.out.println("EFECTIVAMENTE PUEDES CAMBIAR DE LISTO A ENTREGADO");
             }
