@@ -14,7 +14,7 @@ public class BeanConfiguration {
 
 
 
-    private final IRestaurantePersistencePort restauranteServicePort;
+    private final IRestaurantePersistencePort restaurantePersistencePort;
     private final IPlatoPersistencePort platoServicePort;
     private final ICategoriaPersistencePort categoriaPersistencePort;
     private final IUsuarioPersistencePort usuarioServicePort;
@@ -24,7 +24,7 @@ public class BeanConfiguration {
 
     @Bean
     public IRestauranteServicePort restauranteServicePort() {
-        return new RestauranteUseCase(restauranteServicePort);
+        return new RestauranteUseCase(restaurantePersistencePort);
     }
 
 

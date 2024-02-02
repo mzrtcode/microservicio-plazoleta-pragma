@@ -11,6 +11,7 @@ import java.util.List;
 public class UsuarioUseCase implements IUsuarioServicePort {
 
     private final IUsuarioPersistencePort usuarioPersistencePort;
+
     @Override
     public List<UsuarioDto> getUsuariosPorRol(String rol) {
         return usuarioPersistencePort.getUsuariosPorRol(rol);
@@ -20,4 +21,11 @@ public class UsuarioUseCase implements IUsuarioServicePort {
     public UsuarioDto getUsuarioPorId(Long id) {
         return usuarioPersistencePort.getUsuarioPorId(id);
     }
+
+    @Override
+    public UsuarioDto crearEmpleado(UsuarioDto usuarioDto) {
+        return usuarioPersistencePort.crearEmpleado(usuarioDto);
+    }
+
+
 }

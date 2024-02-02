@@ -4,9 +4,7 @@ import com.pragma.plazoletamicroservicio.infrastructure.configuration.FeignClien
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.dto.UsuarioDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +19,7 @@ public interface IUsuarioFeignClient {
     @GetMapping(value = "/usuarios/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     UsuarioDto getUsuarioPorId(@PathVariable Long id);
 
+    @PostMapping(value = "/usuarios", consumes = MediaType.APPLICATION_JSON_VALUE)
+    UsuarioDto crearEmpleado(@RequestBody UsuarioDto usuarioDto);
 
 }

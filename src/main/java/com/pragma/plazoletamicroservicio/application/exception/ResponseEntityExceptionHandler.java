@@ -23,4 +23,13 @@ public class ResponseEntityExceptionHandler {
         ErrorMessage errorMessage = new ErrorMessage(httpStatus, ex.getMessage());
         return ResponseEntity.status(httpStatus).body(errorMessage);
     }
+
+    @ExceptionHandler(UsuarioNoRegistradoException.class)
+    public ResponseEntity<ErrorMessage> UsuarioNoRegistradoExceptionHandler(UsuarioNoRegistradoException ex){
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        ErrorMessage errorMessage = new ErrorMessage(httpStatus, ex.getMessage());
+        return ResponseEntity.status(httpStatus).body(errorMessage);
+    }
+
+
 }

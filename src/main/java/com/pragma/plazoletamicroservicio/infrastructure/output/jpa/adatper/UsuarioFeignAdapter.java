@@ -4,7 +4,6 @@ import com.pragma.plazoletamicroservicio.domain.spi.IUsuarioPersistencePort;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.dto.UsuarioDto;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.feignclient.IUsuarioFeignClient;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,4 +23,11 @@ public class UsuarioFeignAdapter implements IUsuarioPersistencePort {
     public UsuarioDto getUsuarioPorId(Long id) {
         return usuarioFeignClient.getUsuarioPorId(id);
     }
+
+    @Override
+    public UsuarioDto crearEmpleado(UsuarioDto empleado) {
+        return usuarioFeignClient.crearEmpleado(empleado);
+    }
+
+
 }

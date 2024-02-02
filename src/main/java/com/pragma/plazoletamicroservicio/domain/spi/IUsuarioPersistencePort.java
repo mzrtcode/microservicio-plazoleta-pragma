@@ -9,4 +9,6 @@ public interface IUsuarioPersistencePort {
     List<UsuarioDto> getUsuariosPorRol(String rol);
 
     UsuarioDto getUsuarioPorId(Long id);
+
+    UsuarioDto crearEmpleado(UsuarioDto usuarioDto);
 }
