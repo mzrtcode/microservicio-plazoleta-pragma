@@ -10,21 +10,24 @@ import com.pragma.plazoletamicroservicio.domain.model.Rol;
 import com.pragma.plazoletamicroservicio.domain.spi.IEmpleadoRestaurantePersistencePort;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.dto.UsuarioDto;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.exception.RestauranteNotFoundException;
+import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.AutenticacionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UsuarioHandler {
+public class UsuarioHandlerImpl implements IUsuarioHandler{
 
     private final IEmpleadoRestaurantePersistencePort empleadoRestaurantePersistencePort;
     private final IRestauranteServicePort restauranteServicePort;
     private final IUsuarioServicePort usuarioServicePort;
+    private final AutenticacionService autenticacionService;
 
     public UsuarioDto crearEmpleado(EmpleadoRequest empleadoRequest) throws RestauranteNotFoundException, UsuarioNoRegistradoException {
 
         UsuarioDto empleado = new UsuarioDto();
         empleado.setRol(Rol.EMPLEADO);
+        empleado.setNombre(empleadoRequest.getNombre());
         empleado.setCelular(empleadoRequest.getCelular());
         empleado.setCorreo(empleadoRequest.getCorreo());
         empleado.setClave(empleadoRequest.getClave());
@@ -36,12 +39,20 @@ public class UsuarioHandler {
         // VALIDAR SI EL RESTAURANTE EXISTE
         Restaurante restaurante = restauranteServicePort.getRestauranteById(empleadoRequest.getIdRestaurante());
 
+
+        // Validar que el propietario sea dueño del restaurante al que va a asociar el empleado
+        Long idPropietarioLogeado = autenticacionService.obtenerUsuarioSesionActual().getId();
+        if(idPropietarioLogeado != restaurante.getIdPropietario()){
+            throw new RestauranteNotFoundException("El Restaurante pertenece a otro propietario");
+        }
+
         // Registar el usuario tipo empleado en el MICROSERVICIO USUARIOS
         UsuarioDto empleadoCreado;
         try {
+            System.out.println(empleado);
             empleadoCreado = usuarioServicePort.crearEmpleado(empleado);
         } catch (Exception e) {
-            throw new UsuarioNoRegistradoException("Error al registrar el usuario en el microservicio de usuarios.");
+            throw new UsuarioNoRegistradoException("Error al registrar el usuario en el microservicio de usuarios." + e);
         }
 
         // Si el empleado se registró en el microservicio de usuarios y su id
