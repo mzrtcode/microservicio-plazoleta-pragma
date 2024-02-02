@@ -24,6 +24,6 @@ public class PedidoDto {
 
     private Long idChef;
 
-    private List<Plato> platos;
+    private List<PlatoDTO> platos;
 
 }

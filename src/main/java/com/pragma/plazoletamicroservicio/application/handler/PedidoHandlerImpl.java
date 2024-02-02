@@ -3,6 +3,7 @@ package com.pragma.plazoletamicroservicio.application.handler;
 import com.pragma.plazoletamicroservicio.application.dto.*;
 import com.pragma.plazoletamicroservicio.application.exception.PedidoInvalidException;
 import com.pragma.plazoletamicroservicio.application.mapper.IPedidoMapper;
+import com.pragma.plazoletamicroservicio.application.mapper.IPlatoMapper;
 import com.pragma.plazoletamicroservicio.domain.api.*;
 import com.pragma.plazoletamicroservicio.domain.exception.PlatoNoExiste;
 import com.pragma.plazoletamicroservicio.domain.model.*;
@@ -34,6 +35,7 @@ public class PedidoHandlerImpl implements IPedidoHandler {
     private final AutenticacionService autenticacionService;
     private final IPedidoMapper pedidoMapper;
     private final IEmpleadoRestauranteServicePort empleadoRestauranteServicePort;
+    private final IPlatoMapper platoMapper;
 
 
     @Override
@@ -146,14 +148,22 @@ public class PedidoHandlerImpl implements IPedidoHandler {
         List<PedidoDto> content = pedidoMapper.toPedidoDtoList(pedidosList);
         content.forEach(itemPedido -> {
            Long idPedido = itemPedido.getId();
-            List<PedidoPlato> listaPedidoPlatos = pedidoPlatoServicePort.findByPedidoEntityId(idPedido);
-            List<Plato> listaPlatos = new ArrayList<Plato>();
+
+
+            List<PedidoPlato> listaPedidoPlatos = pedidoPlatoServicePort.findByPedidoEntityId(idPedido); //TABLA INTERMEDIA PEDIDOS_PLATOS
+
+            List<PlatoDTO> listaPlatos = new ArrayList<PlatoDTO>();
+
+            //Extraemos los platos de PEDIDOS_PLATOS y los ponemos dentro del pedido
             itemPedido.setPlatos(listaPlatos);
 
             listaPedidoPlatos.forEach(itemPedidoPlato -> {
                 Plato plato = itemPedidoPlato.getPlato();
-                System.out.println(plato);
-                listaPlatos.add(plato);
+                // Añadimos el plato que trajimos de PEDIDOS_PLATOS para ponerlo en la lista que va dentro de Pedido
+
+                //Mapear el plato de la base de datos al PlatoDto
+                PlatoDTO platoDto = platoMapper.toPlatoDto(plato);
+                listaPlatos.add(platoDto);
             });
 
         });
