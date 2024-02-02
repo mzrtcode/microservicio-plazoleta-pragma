@@ -7,6 +7,7 @@ import com.pragma.plazoletamicroservicio.domain.api.*;
 import com.pragma.plazoletamicroservicio.domain.exception.PlatoNoExiste;
 import com.pragma.plazoletamicroservicio.domain.model.*;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.dto.UsuarioDto;
+import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.entity.EmpleadoRestauranteEntity;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.entity.PedidoEntity;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.exception.RestauranteNotFoundException;
 import com.pragma.plazoletamicroservicio.infrastructure.security.jwt.AutenticacionService;
@@ -32,6 +33,7 @@ public class PedidoHandlerImpl implements IPedidoHandler {
     private final IPedidoPlatoServicePort pedidoPlatoServicePort;
     private final AutenticacionService autenticacionService;
     private final IPedidoMapper pedidoMapper;
+    private final IEmpleadoRestauranteServicePort empleadoRestauranteServicePort;
 
     @Override
     public void crearPedidoInDB(PedidoRequest pedidoRequest) throws PedidoInvalidException, RestauranteNotFoundException, PlatoNoExiste {
@@ -121,10 +123,21 @@ public class PedidoHandlerImpl implements IPedidoHandler {
     }
 
     @Override
-    public PedidoResponse findByEstadoPedidoAndIdChef(EstadoPedido estadoPedido, Long idUsuario, int pageNo, int pageSize) {
+    public PedidoResponse listarPedidosPorRestauranteEmpleado(EstadoPedido estadoPedido, int pageNo, int pageSize) throws PedidoInvalidException {
+
+        // Extraer el id del usuario de la sesion actual
+        Long idClienteSesion = autenticacionService.obtenerUsuarioSesionActual().getId();
+
+
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-        Page<Pedido> pagePedidos = pedidoServicePort.findByEstadoPedidoAndIdChef(idUsuario, estadoPedido, pageable);
+        //COMPROBAR QUE EL EXISTA UN RESTAURANTE ASOCIADO AL EMPLEADO
+        Optional<EmpleadoRestauranteEntity> restaurante = empleadoRestauranteServicePort.findRestauranteByIdEmpleado(idClienteSesion);
+        if(restaurante.isEmpty()) throw new PedidoInvalidException("El empleado no esta asociado a ningun restaurante");
+
+
+        Long idRestaurante = restaurante.get().getRestaurante().getId();
+        Page<Pedido> pagePedidos = pedidoServicePort.listarPedidosPorRestauranteEmpleado(idRestaurante, estadoPedido, pageable);
         List<Pedido> pedidosList = pagePedidos.getContent();
 
         List<PedidoDto> content = pedidoMapper.toPedidoDtoList(pedidosList);

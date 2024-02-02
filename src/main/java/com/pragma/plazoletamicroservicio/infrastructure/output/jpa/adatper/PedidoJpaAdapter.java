@@ -31,8 +31,8 @@ public class PedidoJpaAdapter implements IPedidoPersistencePort {
     }
 
     @Override
-    public Page<Pedido> findByEstadoPedidoAndIdChef(Long idChef, EstadoPedido estadoPedido, Pageable pageable) {
-        Page<PedidoEntity> entities = pedidoRepository.findByEstadoPedidoAndIdChef(idChef, estadoPedido, pageable);
+    public Page<Pedido> listarPedidosPorRestauranteEmpleado(Long idChef, EstadoPedido estadoPedido, Pageable pageable) {
+        Page<PedidoEntity> entities = pedidoRepository.findByRestauranteIdAndEstadoPedido(idChef, estadoPedido, pageable);
         return  entities.map(pedidoMapper::toPedido);
     }
 

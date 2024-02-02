@@ -15,7 +15,6 @@ public interface IPedidoRepository extends JpaRepository<PedidoEntity, Long> {
     boolean existsByIdClienteAndEstadoPedidoIn(Long idCliente, List<EstadoPedido> estados);
     List<PedidoEntity> findByIdAndEstadoPedido(Long id, EstadoPedido estadoPedido);
 
-    @Query("SELECT p FROM PedidoEntity p WHERE p.estadoPedido = :estadoPedido AND p.idChef = :idChef")
-    Page<PedidoEntity> findByEstadoPedidoAndIdChef(Long idChef, EstadoPedido estadoPedido, Pageable pageable);
+    Page<PedidoEntity> findByRestauranteIdAndEstadoPedido(Long idRestaurante, EstadoPedido estadoPedido, Pageable pageable);
 
 }

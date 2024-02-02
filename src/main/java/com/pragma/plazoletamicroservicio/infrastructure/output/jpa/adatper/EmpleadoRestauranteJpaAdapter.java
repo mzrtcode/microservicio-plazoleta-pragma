@@ -8,6 +8,8 @@ import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.repository.IE
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class EmpleadoRestauranteJpaAdapter implements IEmpleadoRestaurantePersistencePort {
@@ -21,5 +23,10 @@ public class EmpleadoRestauranteJpaAdapter implements IEmpleadoRestaurantePersis
 
         EmpleadoRestauranteEntity entity = empleadoRestauranteMapper.tooEntity(empleadoRestaurante);
         return empleadoRestauranteRepository.save(entity);
+    }
+
+    @Override
+    public Optional<EmpleadoRestauranteEntity> findEmpleadoRestauranteByEmpleadoId(Long idEmpleado) {
+        return empleadoRestauranteRepository.findByEmpleadoId(idEmpleado);
     }
 }

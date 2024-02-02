@@ -12,6 +12,6 @@ import java.util.List;
 public interface IPedidoHandler {
 
     void crearPedidoInDB(PedidoRequest pedidoRequest) throws PedidoInvalidException, RestauranteNotFoundException, PlatoNoExiste;
-    PedidoResponse findByEstadoPedidoAndIdChef(EstadoPedido estadoPedido, Long idUsuario, int pageNo, int pageSize);
+    PedidoResponse listarPedidosPorRestauranteEmpleado(EstadoPedido estadoPedido, int pageNo, int pageSize) throws PedidoInvalidException;
 
 }

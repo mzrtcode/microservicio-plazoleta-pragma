@@ -15,6 +15,6 @@ public interface IPedidoServicePort {
 
     boolean existsByIdClienteAndEstadoPedidoIn(Long idCliente, List<EstadoPedido> estados);
 
-    Page<Pedido> findByEstadoPedidoAndIdChef(Long idChef, EstadoPedido estadoPedido, Pageable pageable);
+    Page<Pedido> listarPedidosPorRestauranteEmpleado(Long idRestaurante, EstadoPedido estadoPedido, Pageable pageable);
 
 }
