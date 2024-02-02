@@ -19,6 +19,8 @@ public class Pedido {
 
     private Restaurante restaurante;
 
+    private Long idEmpleadoAsignado;
+
     public Pedido() {
     }
 
@@ -77,5 +79,13 @@ public class Pedido {
 
     public void setRestaurante(Restaurante restaurante) {
         this.restaurante = restaurante;
+    }
+
+    public Long getIdEmpleadoAsignado() {
+        return idEmpleadoAsignado;
+    }
+
+    public void setIdEmpleadoAsignado(Long idEmpleadoAsignado) {
+        this.idEmpleadoAsignado = idEmpleadoAsignado;
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +35,15 @@ public class PedidoJpaAdapter implements IPedidoPersistencePort {
     public Page<Pedido> listarPedidosPorRestauranteEmpleado(Long idChef, EstadoPedido estadoPedido, Pageable pageable) {
         Page<PedidoEntity> entities = pedidoRepository.findByRestauranteIdAndEstadoPedido(idChef, estadoPedido, pageable);
         return  entities.map(pedidoMapper::toPedido);
+    }
+
+    @Override
+    public Optional<Pedido> obtenerPedidoPorId(Long idPedido) {
+
+
+        Optional<PedidoEntity> pedidoEntity = pedidoRepository.findById(idPedido);
+        Optional<Pedido> pedido = pedidoMapper.toPedido(pedidoEntity);
+        return pedido;
     }
 
 }

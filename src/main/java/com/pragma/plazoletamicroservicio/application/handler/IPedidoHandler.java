@@ -1,5 +1,6 @@
 package com.pragma.plazoletamicroservicio.application.handler;
 
+import com.pragma.plazoletamicroservicio.application.dto.ActualizarPedidoRequest;
 import com.pragma.plazoletamicroservicio.application.dto.PedidoRequest;
 import com.pragma.plazoletamicroservicio.application.dto.PedidoResponse;
 import com.pragma.plazoletamicroservicio.application.exception.PedidoInvalidException;
@@ -13,5 +14,7 @@ public interface IPedidoHandler {
 
     void crearPedidoInDB(PedidoRequest pedidoRequest) throws PedidoInvalidException, RestauranteNotFoundException, PlatoNoExiste;
     PedidoResponse listarPedidosPorRestauranteEmpleado(EstadoPedido estadoPedido, int pageNo, int pageSize) throws PedidoInvalidException;
+
+    void actualizarPedido(Long idPedido, ActualizarPedidoRequest actualizarPedidoRequest) throws PedidoInvalidException;
 
 }

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class PedidoUseCase implements IPedidoServicePort {
@@ -31,7 +32,10 @@ public class PedidoUseCase implements IPedidoServicePort {
         return pedidoPersistencePort.listarPedidosPorRestauranteEmpleado(idRestaurante, estadoPedido, pageable);
     }
 
-
+    @Override
+    public Optional<Pedido> obtenerPedidoPorId(Long idPedido) {
+        return pedidoPersistencePort.obtenerPedidoPorId(idPedido);
+    }
 
 
 }

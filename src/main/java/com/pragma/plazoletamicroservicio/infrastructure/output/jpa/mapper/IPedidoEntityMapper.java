@@ -7,12 +7,15 @@ import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.entity.Restau
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.Optional;
+
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface IPedidoEntityMapper {
 
     PedidoEntity toPedidoEntity(Pedido pedido);
-
     Pedido toPedido (PedidoEntity pedidoEntity);
+
+    Optional<Pedido> toPedido(Optional<PedidoEntity> pedidoEntityOptional);
 }

@@ -37,4 +37,7 @@ public class PedidoEntity {
     @JsonIgnore
     private RestauranteEntity restaurante;
 
+    @Column(name = "id_empleado_asignado")
+    private Long idEmpleadoAsignado;
+
 }

@@ -16,9 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLOutput;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -53,7 +55,7 @@ public class PedidoHandlerImpl implements IPedidoHandler {
         /* Validar que el cliente pueda realizar otro pedido solo si todos sus pedidos
         anteriores se encuentran en el estado "ENTREGADO" o "CANCELADO". */
         List<EstadoPedido> estados = Arrays.asList(EstadoPedido.PENDIENTE, EstadoPedido.EN_PREPARACION, EstadoPedido.LISTO);
-        if(pedidoServicePort.existsByIdClienteAndEstadoPedidoIn(idClienteSesion,estados)){
+        if (pedidoServicePort.existsByIdClienteAndEstadoPedidoIn(idClienteSesion, estados)) {
             throw new PedidoInvalidException("No puedes crear un nuevo pedido mientras tienes uno en 'PENDIENTE', 'PREPARACION' o 'LISTO'");
         }
 
@@ -95,8 +97,6 @@ public class PedidoHandlerImpl implements IPedidoHandler {
         }
 
 
-
-
         // 1 Creamos el pedido en la base de datos
         Pedido pedido = new Pedido();
         pedido.setIdCliente(idClienteSesion);
@@ -136,7 +136,8 @@ public class PedidoHandlerImpl implements IPedidoHandler {
 
         //COMPROBAR QUE EL EXISTA UN RESTAURANTE ASOCIADO AL EMPLEADO
         Optional<EmpleadoRestauranteEntity> restaurante = empleadoRestauranteServicePort.findRestauranteByIdEmpleado(idClienteSesion);
-        if(restaurante.isEmpty()) throw new PedidoInvalidException("El empleado no esta asociado a ningun restaurante");
+        if (restaurante.isEmpty())
+            throw new PedidoInvalidException("El empleado no esta asociado a ningun restaurante");
 
 
         Long idRestaurante = restaurante.get().getRestaurante().getId();
@@ -144,10 +145,10 @@ public class PedidoHandlerImpl implements IPedidoHandler {
 
         List<Pedido> pedidosList = pagePedidos.getContent();
 
-
+        // Cambiando el contenido de la lista de Pedidos para anidarle los platos dentro
         List<PedidoDto> content = pedidoMapper.toPedidoDtoList(pedidosList);
         content.forEach(itemPedido -> {
-           Long idPedido = itemPedido.getId();
+            Long idPedido = itemPedido.getId();
 
 
             List<PedidoPlato> listaPedidoPlatos = pedidoPlatoServicePort.findByPedidoEntityId(idPedido); //TABLA INTERMEDIA PEDIDOS_PLATOS
@@ -179,5 +180,59 @@ public class PedidoHandlerImpl implements IPedidoHandler {
         return pedidoResponse;
     }
 
+    public void actualizarPedido(Long idPedido, ActualizarPedidoRequest actualizarPedidoRequest) throws PedidoInvalidException {
+        // 1 OBTENER ROL USUARIO
+        Rol  rolUsuarioSesion =  Rol.valueOf(autenticacionService.obtenerUsuarioSesionActual().getAuthorities().get(0).toString()) ;
+        Long idUsuarioSesion = autenticacionService.obtenerUsuarioSesionActual().getId();
+
+        // VALIDAR QUE EL PEDIDO EXISTA
+        Optional<Pedido> pedidoOptional = pedidoServicePort.obtenerPedidoPorId(idPedido);
+        if(pedidoOptional.isEmpty()) throw new PedidoInvalidException("El id de pedido no existe");
+
+
+        // SI ES EMPLEADO PUEDE TOMAR EL PEDIDO y CAMBIAR EL ESTADO
+        if (rolUsuarioSesion == Rol.EMPLEADO) {
+
+            Pedido pedido = pedidoOptional.get();
+
+
+            // SOLO SE PUEDE CAMBIAR A ESTADO EN_PREPARACION SI ESTA EN PENDIENTE
+            if (actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.EN_PREPARACION
+                    && pedido.getEstadoPedido() == EstadoPedido.PENDIENTE) {
+
+                System.out.println("EFECTIVAMENTE PUEDES CAMBIAR DE PREPRACION A PENDIENTE");
+            }
+
+
+
+            // SOLO SE PUEDE CAMBIAR A LISTO SI ESTA EN PEDIENTE
+            if(actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.LISTO
+                    && pedido.getEstadoPedido() == EstadoPedido.PENDIENTE){
+                System.out.println("EFECTIVAMENTE PUEDES CAMBIAR DE PEDIENTE A LISTO");
+            }
+
+            // SOLO SE PUEDE CAMBIAR A ENTREGADO SI ESTA LISTO
+
+            if(actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.ENTREGADO
+                    && pedido.getEstadoPedido() == EstadoPedido.LISTO){
+                System.out.println("EFECTIVAMENTE PUEDES CAMBIAR DE LISTO A ENTREGADO");
+            }
+
+            else {
+                System.out.println("OPERACION NO PERMITIDA");
+            }
+
+        }
+
+        // SI ES CLIENTE SOLO PUEDE CAMBIAR EL ESTADO
+        if(rolUsuarioSesion == Rol.CLIENTE){
+
+            // SOLO SE PUEDE CAMBIAR EL ESTADO A CANCELADO SI ESTA EN PENDIENTE
+
+        }
+
+
+
+    }
 
 }
