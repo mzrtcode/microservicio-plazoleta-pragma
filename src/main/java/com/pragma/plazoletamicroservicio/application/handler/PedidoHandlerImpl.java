@@ -185,12 +185,10 @@ public class PedidoHandlerImpl implements IPedidoHandler {
         Rol  rolUsuarioSesion =  Rol.valueOf(autenticacionService.obtenerUsuarioSesionActual().getAuthorities().get(0).toString()) ;
         Long idUsuarioSesion = autenticacionService.obtenerUsuarioSesionActual().getId();
 
-        // VALIDAR QUE EL PEDIDO EXISTA
-        //Optional<Pedido> pedidoOptional = pedidoServicePort.obtenerPedidoPorId(idPedido);
+        //VALIDAR QUE EL PEDIDO EXISTA
+        Optional<Pedido> pedidoOptional = pedidoServicePort.obtenerPedidoPorId(idPedido);
 
-        Pedido pedidoC = new Pedido();
-        pedidoC.setEstadoPedido(EstadoPedido.PENDIENTE);
-        Optional<Pedido> pedidoOptional = Optional.of(pedidoC);
+
 
         if(pedidoOptional.isEmpty()) throw new PedidoInvalidException("El id de pedido no existe");
 
@@ -205,33 +203,40 @@ public class PedidoHandlerImpl implements IPedidoHandler {
             if (actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.EN_PREPARACION
                     && pedido.getEstadoPedido() == EstadoPedido.PENDIENTE) {
 
-                pedido.setEstadoPedido(EstadoPedido.PENDIENTE);
+                pedido.setEstadoPedido(EstadoPedido.EN_PREPARACION);
                 pedido.setIdEmpleadoAsignado(idUsuarioSesion);
+
+                pedidoServicePort.savePedido(pedido);
+                return;
             }
 
 
 
-            // SOLO SE PUEDE CAMBIAR A LISTO SI ESTA EN PEDIENTE
+            // SOLO SE PUEDE CAMBIAR A LISTO SI ESTA EN EN_PENDIENTE
             else if(actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.LISTO
-                    && pedido.getEstadoPedido() == EstadoPedido.PENDIENTE){
-                System.out.println("EFECTIVAMENTE PUEDES CAMBIAR DE PEDIENTE A LISTO");
+                    && pedido.getEstadoPedido() == EstadoPedido.EN_PREPARACION){
+                System.out.println("EFECTIVAMENTE PUEDES CAMBIAR DE EN_PREPARACION A LISTO");
+                return;
             }
 
             // SOLO SE PUEDE CAMBIAR A ENTREGADO SI ESTA LISTO
 
             else if(actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.ENTREGADO
-                    && pedido.getEstadoPedido() == EstadoPedido.LISTO){
+                    && pedido.getEstadoPedido() == EstadoPedido.LISTO) {
                 System.out.println("EFECTIVAMENTE PUEDES CAMBIAR DE LISTO A ENTREGADO");
+                return;
             }
 
             else {
                 System.out.println("OPERACION NO PERMITIDA");
+                return;
             }
 
         }
 
         // SI ES CLIENTE SOLO PUEDE CAMBIAR EL ESTADO
         if(rolUsuarioSesion == Rol.CLIENTE){
+            return;
 
             // SOLO SE PUEDE CAMBIAR EL ESTADO A CANCELADO SI ESTA EN PENDIENTE
 
