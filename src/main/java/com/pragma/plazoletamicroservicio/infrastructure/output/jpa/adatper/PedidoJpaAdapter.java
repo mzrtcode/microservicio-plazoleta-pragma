@@ -4,6 +4,7 @@ import com.pragma.plazoletamicroservicio.domain.model.EstadoPedido;
 import com.pragma.plazoletamicroservicio.domain.model.Pedido;
 import com.pragma.plazoletamicroservicio.domain.spi.IPedidoPersistencePort;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.entity.PedidoEntity;
+import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.feignclient.IMensajeriaFeignClient;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.mapper.IPedidoEntityMapper;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.repository.IPedidoRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class PedidoJpaAdapter implements IPedidoPersistencePort {
 
     private final IPedidoRepository pedidoRepository;
     private final IPedidoEntityMapper pedidoMapper;
+    private final IMensajeriaFeignClient mensajeriaFeignClient;
     @Override
     public PedidoEntity savePedido(Pedido pedido) {
         PedidoEntity pedidoEntity = pedidoMapper.toPedidoEntity(pedido);
@@ -39,11 +41,14 @@ public class PedidoJpaAdapter implements IPedidoPersistencePort {
 
     @Override
     public Optional<Pedido> obtenerPedidoPorId(Long idPedido) {
-
-
         Optional<PedidoEntity> pedidoEntity = pedidoRepository.findById(idPedido);
         Optional<Pedido> pedido = pedidoMapper.toPedido(pedidoEntity);
         return pedido;
+    }
+
+    @Override
+    public void notificarUsuario(String destinatario, String mensaje){
+        mensajeriaFeignClient.notificarUsuario(destinatario, mensaje);
     }
 
 }

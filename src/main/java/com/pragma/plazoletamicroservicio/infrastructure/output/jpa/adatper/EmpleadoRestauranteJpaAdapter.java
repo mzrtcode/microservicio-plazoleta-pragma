@@ -20,7 +20,6 @@ public class EmpleadoRestauranteJpaAdapter implements IEmpleadoRestaurantePersis
 
     @Override
     public EmpleadoRestauranteEntity registrarEmpleadoRestaurante(EmpleadoRestaurante empleadoRestaurante) {
-
         EmpleadoRestauranteEntity entity = empleadoRestauranteMapper.tooEntity(empleadoRestaurante);
         return empleadoRestauranteRepository.save(entity);
     }

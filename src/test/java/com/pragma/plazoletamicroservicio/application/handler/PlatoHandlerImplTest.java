@@ -148,4 +148,18 @@ class PlatoHandlerImplTest {
         platoServicePort.platoExistsById(id);
         verify(platoServicePort, times(1)).platoExistsById(id);
     }
+
+    @Test
+    void platoExistsById() {
+        Long idPlato = 20L;
+        boolean booleano = true;
+
+        when(platoServicePort.platoExistsById(idPlato)).thenReturn(booleano);
+
+        // ACT
+        boolean resultado = platoHandler.platoExistsById(idPlato);
+
+        //ASSERT
+        assertEquals(booleano, resultado);
+    }
 }

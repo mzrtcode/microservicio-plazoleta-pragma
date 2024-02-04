@@ -49,7 +49,6 @@ public class UsuarioHandlerImpl implements IUsuarioHandler{
         // Registar el usuario tipo empleado en el MICROSERVICIO USUARIOS
         UsuarioDto empleadoCreado;
         try {
-            System.out.println(empleado);
             empleadoCreado = usuarioServicePort.crearEmpleado(empleado);
         } catch (Exception e) {
             throw new UsuarioNoRegistradoException("Error al registrar el usuario en el microservicio de usuarios." + e);

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "USUARIO-MOCK-API", url = "${external-mock-api-url}", configuration = FeignClientConfig.class)
+@FeignClient(name = "MICROSERVICIO-USUARIOS", url = "${microservicio-usuarios-url}", configuration = FeignClientConfig.class)
 public interface IUsuarioFeignClient {
 
 

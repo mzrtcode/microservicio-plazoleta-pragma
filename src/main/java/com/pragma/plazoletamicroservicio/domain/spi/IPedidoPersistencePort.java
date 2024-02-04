@@ -20,5 +20,7 @@ public interface IPedidoPersistencePort {
 
     Optional<Pedido> obtenerPedidoPorId(Long idPedido);
 
+    void notificarUsuario(String destinatario, String mensaje);
+
 
 }

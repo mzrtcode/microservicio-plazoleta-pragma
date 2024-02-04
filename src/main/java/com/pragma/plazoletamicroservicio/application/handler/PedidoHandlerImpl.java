@@ -16,11 +16,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLOutput;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -38,6 +37,9 @@ public class PedidoHandlerImpl implements IPedidoHandler {
     private final IPedidoMapper pedidoMapper;
     private final IEmpleadoRestauranteServicePort empleadoRestauranteServicePort;
     private final IPlatoMapper platoMapper;
+
+    private static final Random random = new Random();
+
 
 
     @Override
@@ -79,7 +81,7 @@ public class PedidoHandlerImpl implements IPedidoHandler {
             }
 
             // Validar que la cantidad de los platos sea >= 1
-            if (!(platoPedido.getCantidad() >= 1)) {
+            if (platoPedido.getCantidad() < 1) {
                 throw new PedidoInvalidException("La cantidad de platos por pedido debe ser mayor que 0");
             }
 
@@ -97,6 +99,10 @@ public class PedidoHandlerImpl implements IPedidoHandler {
         }
 
 
+        // Crear PIN aleatrio
+        String pin = String.format("%08d", random.nextInt(100000000));
+
+
         // 1 Creamos el pedido en la base de datos
         Pedido pedido = new Pedido();
         pedido.setIdCliente(idClienteSesion);
@@ -104,6 +110,8 @@ public class PedidoHandlerImpl implements IPedidoHandler {
         pedido.setFecha(LocalDateTime.now());
         pedido.setEstadoPedido(EstadoPedido.PENDIENTE);
         pedido.setRestaurante(restaurante);
+        //generamos y seteamos el pin aleatorio al pedido
+        pedido.setCodigoRetiro(pin);
         PedidoEntity pedidoEntity = pedidoServicePort.savePedido(pedido);
         //Colocamos el id del Pedido creado para poder registar el pedido en pedidos_platos
         pedido.setId(pedidoEntity.getId());
@@ -153,7 +161,7 @@ public class PedidoHandlerImpl implements IPedidoHandler {
 
             List<PedidoPlato> listaPedidoPlatos = pedidoPlatoServicePort.findByPedidoEntityId(idPedido); //TABLA INTERMEDIA PEDIDOS_PLATOS
 
-            List<PlatoDTO> listaPlatos = new ArrayList<PlatoDTO>();
+            List<PlatoDTO> listaPlatos = new ArrayList<>();
 
             //Extraemos los platos de PEDIDOS_PLATOS y los ponemos dentro del pedido
             itemPedido.setPlatos(listaPlatos);
@@ -188,18 +196,16 @@ public class PedidoHandlerImpl implements IPedidoHandler {
         //VALIDAR QUE EL PEDIDO EXISTA
         Optional<Pedido> pedidoOptional = pedidoServicePort.obtenerPedidoPorId(idPedido);
 
-
-
         if(pedidoOptional.isEmpty()) throw new PedidoInvalidException("El id de pedido no existe");
 
 
-        // SI ES EMPLEADO PUEDE TOMAR EL PEDIDO y CAMBIAR EL ESTADO
+        // 1. SI ES EMPLEADO PUEDE TOMAR EL PEDIDO y CAMBIAR EL ESTADO
         if (rolUsuarioSesion == Rol.EMPLEADO) {
 
             Pedido pedido = pedidoOptional.get();
 
 
-            // SOLO SE PUEDE CAMBIAR A ESTADO EN_PREPARACION SI ESTA EN PENDIENTE
+            // 1.1 SOLO SE PUEDE CAMBIAR A ESTADO EN_PREPARACION SI ESTA EN PENDIENTE
             if (actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.EN_PREPARACION
                     && pedido.getEstadoPedido() == EstadoPedido.PENDIENTE) {
 
@@ -211,15 +217,20 @@ public class PedidoHandlerImpl implements IPedidoHandler {
             }
 
 
-
-            // SOLO SE PUEDE CAMBIAR A LISTO SI ESTA EN EN_PENDIENTE
+            // 1.2 SOLO SE PUEDE CAMBIAR A LISTO SI ESTA EN EN_PENDIENTE
             else if(actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.LISTO
                     && pedido.getEstadoPedido() == EstadoPedido.EN_PREPARACION){
-                System.out.println("EFECTIVAMENTE PUEDES CAMBIAR DE EN_PREPARACION A LISTO");
+
+                pedido.setEstadoPedido(EstadoPedido.LISTO);
+
+                UsuarioDto cliente = usuarioServicePort.getUsuarioPorId(pedido.getIdCliente());
+                pedidoServicePort.notificarUsuario(cliente.getCelular(),
+                        "Buen dia, señor(a) " + cliente.getNombre() + " su pedido " + idPedido + " ya esta listo para recoger. \nRecuerde mostrar el siguiente pin: " +  pedido.getCodigoRetiro());
+                pedidoServicePort.savePedido(pedido);
                 return;
             }
 
-            // SOLO SE PUEDE CAMBIAR A ENTREGADO SI ESTA LISTO
+            // 1.3 SOLO SE PUEDE CAMBIAR A ENTREGADO SI ESTA LISTO
 
             else if(actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.ENTREGADO
                     && pedido.getEstadoPedido() == EstadoPedido.LISTO) {
@@ -234,11 +245,11 @@ public class PedidoHandlerImpl implements IPedidoHandler {
 
         }
 
-        // SI ES CLIENTE SOLO PUEDE CAMBIAR EL ESTADO
+        // 2. SI ES CLIENTE SOLO PUEDE CAMBIAR EL ESTADO
         if(rolUsuarioSesion == Rol.CLIENTE){
             return;
 
-            // SOLO SE PUEDE CAMBIAR EL ESTADO A CANCELADO SI ESTA EN PENDIENTE
+            // 2.1 SOLO SE PUEDE CAMBIAR EL ESTADO A CANCELADO SI ESTA EN PENDIENTE
 
         }
 

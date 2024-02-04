@@ -8,9 +8,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PedidoPlatoUseCaseTest {
@@ -29,5 +31,21 @@ class PedidoPlatoUseCaseTest {
 
         // ASSERT
         verify(platoPersistencePort, times(1)).savePedidoPlato(pedidoPlato);
+    }
+
+    @Test
+    void findByPedidoEntityId() {
+        Long idPedidoEntity = 30L;
+        PedidoPlato pedidoPlato = new PedidoPlato();
+        List<PedidoPlato> listaPedidoPlatos = Arrays.asList(pedidoPlato);
+
+        when(platoPersistencePort.findByPedidoEntityId(idPedidoEntity)).thenReturn(listaPedidoPlatos);
+
+        // ACT
+        List<PedidoPlato> resultado = platoUseCase.findByPedidoEntityId(idPedidoEntity);
+
+        // ASSERT
+        assertEquals(listaPedidoPlatos, resultado);
+
     }
 }

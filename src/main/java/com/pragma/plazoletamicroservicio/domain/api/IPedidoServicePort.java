@@ -20,4 +20,6 @@ public interface IPedidoServicePort {
 
     Optional<Pedido> obtenerPedidoPorId(Long idPedido);
 
+    void notificarUsuario(String destinatario, String mensaje);
+
 }

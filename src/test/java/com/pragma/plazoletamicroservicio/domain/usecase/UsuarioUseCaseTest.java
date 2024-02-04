@@ -61,4 +61,17 @@ class UsuarioUseCaseTest {
         verify(usuarioPersistencePort, times(1)).getUsuarioPorId(idUsuario);
     }
 
+    @Test
+    void crearEmpleado() {
+        UsuarioDto usuarioDto = new UsuarioDto();
+
+        when(usuarioPersistencePort.crearEmpleado(usuarioDto)).thenReturn(usuarioDto);
+
+        // ACT
+        UsuarioDto resultado = usuarioUseCase.crearEmpleado(usuarioDto);
+
+        // ASSERT
+        assertEquals(usuarioDto, resultado);
+        verify(usuarioPersistencePort, times(1)).crearEmpleado(usuarioDto);
+    }
 }

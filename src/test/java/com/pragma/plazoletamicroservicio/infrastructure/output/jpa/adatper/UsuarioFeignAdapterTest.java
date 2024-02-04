@@ -56,4 +56,20 @@ class UsuarioFeignAdapterTest {
         verify(usuarioFeignClient).getUsuarioPorId(id);
     }
 
+    @Test
+    void crearEmpleado() {
+        // Datos de prueba
+        UsuarioDto empleadoDto = new UsuarioDto();
+        UsuarioDto expectedEmpleadoDto = new UsuarioDto(); // Puedes ajustar esto según el resultado esperado
+
+        // Configuración del mock del cliente Feign
+        when(usuarioFeignClient.crearEmpleado(empleadoDto)).thenReturn(expectedEmpleadoDto);
+
+        // ACT
+        UsuarioDto result = usuarioFeignAdapter.crearEmpleado(empleadoDto);
+
+        // ASSERT
+        verify(usuarioFeignClient).crearEmpleado(empleadoDto);
+        assertEquals(expectedEmpleadoDto, result);}
+
 }

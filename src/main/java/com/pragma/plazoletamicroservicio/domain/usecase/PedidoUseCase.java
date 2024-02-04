@@ -37,5 +37,10 @@ public class PedidoUseCase implements IPedidoServicePort {
         return pedidoPersistencePort.obtenerPedidoPorId(idPedido);
     }
 
+    @Override
+    public void notificarUsuario(String destinatario, String mensaje) {
+        pedidoPersistencePort.notificarUsuario(destinatario, mensaje);
+    }
+
 
 }

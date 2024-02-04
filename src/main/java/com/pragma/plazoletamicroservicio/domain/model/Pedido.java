@@ -21,16 +21,20 @@ public class Pedido {
 
     private Long idEmpleadoAsignado;
 
+    private String codigoRetiro;
+
     public Pedido() {
     }
 
-    public Pedido(Long id, Long idCliente, LocalDateTime fecha, EstadoPedido estadoPedido, Long idChef, Restaurante restaurante) {
+    public Pedido(Long id, Long idCliente, LocalDateTime fecha, EstadoPedido estadoPedido, Long idChef, Restaurante restaurante, Long idEmpleadoAsignado, String codigoRetiro) {
         this.id = id;
         this.idCliente = idCliente;
         this.fecha = fecha;
         this.estadoPedido = estadoPedido;
         this.idChef = idChef;
         this.restaurante = restaurante;
+        this.idEmpleadoAsignado = idEmpleadoAsignado;
+        this.codigoRetiro = codigoRetiro;
     }
 
     public Long getId() {
@@ -87,5 +91,13 @@ public class Pedido {
 
     public void setIdEmpleadoAsignado(Long idEmpleadoAsignado) {
         this.idEmpleadoAsignado = idEmpleadoAsignado;
+    }
+
+    public String getCodigoRetiro() {
+        return codigoRetiro;
+    }
+
+    public void setCodigoRetiro(String codigoRetiro) {
+        this.codigoRetiro = codigoRetiro;
     }
 }

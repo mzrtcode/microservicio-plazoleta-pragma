@@ -40,4 +40,7 @@ public class PedidoEntity {
     @Column(name = "id_empleado_asignado")
     private Long idEmpleadoAsignado;
 
+    @Column(name = "codigo_retiro")
+    private String codigoRetiro;
+
 }

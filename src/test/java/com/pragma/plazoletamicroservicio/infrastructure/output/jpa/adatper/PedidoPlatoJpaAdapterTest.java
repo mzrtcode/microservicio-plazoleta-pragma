@@ -12,6 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -50,4 +53,23 @@ class PedidoPlatoJpaAdapterTest {
         assertEquals(pedidoPlatoEntity, result);
     }
 
+    @Test
+    void findByPedidoEntityId() {
+        // Datos de prueba
+        Long idPedido = 1L;
+        List<PedidoPlatoEntity> pedidoPlatoEntityList = Collections.singletonList(new PedidoPlatoEntity());
+        List<PedidoPlato> expectedPedidoPlatoList = Collections.singletonList(new PedidoPlato());
+
+        when(pedidoPlatoRepository.findByPedidoEntityId(idPedido)).thenReturn(pedidoPlatoEntityList);
+        when(pedidoPlatoMapper.toPedidoPlato(pedidoPlatoEntityList)).thenReturn(expectedPedidoPlatoList);
+
+        // ACT
+        List<PedidoPlato> result = platoJpaAdapter.findByPedidoEntityId(idPedido);
+
+        // ASSERT
+        verify(pedidoPlatoRepository).findByPedidoEntityId(idPedido);
+        verify(pedidoPlatoMapper).toPedidoPlato(pedidoPlatoEntityList);
+        assertEquals(expectedPedidoPlatoList, result);
+
+    }
 }
