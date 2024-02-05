@@ -202,8 +202,6 @@ public class PedidoHandlerImpl implements IPedidoHandler {
         if (rolUsuarioSesion == Rol.EMPLEADO) {
 
 
-
-
             // 1.1 SOLO SE PUEDE CAMBIAR A ESTADO EN_PREPARACION SI ESTA EN PENDIENTE
             if (actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.EN_PREPARACION
                     && pedido.getEstadoPedido() == EstadoPedido.PENDIENTE) {
@@ -246,7 +244,7 @@ public class PedidoHandlerImpl implements IPedidoHandler {
                 return;
 
             } else {
-               throw new PedidoInvalidException("Opercion no permitida");
+                throw new PedidoInvalidException("Opercion no permitida");
             }
 
         }
@@ -256,7 +254,14 @@ public class PedidoHandlerImpl implements IPedidoHandler {
 
 
             // 2.1 SOLO SE PUEDE CAMBIAR EL ESTADO A CANCELADO SI ESTA EN PENDIENTE
+            if (!(actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.CANCELADO
+                    && pedido.getEstadoPedido() == EstadoPedido.PENDIENTE)) {
+                throw new PedidoInvalidException("Solo se pueden cancelar pedidos en estado PENDIENTE");
+            }
 
+            pedido.setEstadoPedido(EstadoPedido.CANCELADO);
+            pedidoServicePort.savePedido(pedido);
+            return;
 
         }
 
