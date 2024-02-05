@@ -243,10 +243,7 @@ public class PedidoHandlerImpl implements IPedidoHandler {
                 pedidoServicePort.savePedido(pedido);
                 return;
 
-            } else {
-                throw new PedidoInvalidException("Opercion no permitida");
             }
-
         }
 
         // 2. SI ES CLIENTE SOLO PUEDE CAMBIAR EL ESTADO

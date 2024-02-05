@@ -211,4 +211,101 @@ class PedidoHandlerImplTest {
         verify(pedidoServicePort, times(1)).notificarUsuario(eq(cliente.getCelular()), anyString());
     }
 
+    @Test
+    public void testActualizarPedidoEmpleadoEntregado() throws PedidoInvalidException {
+        // Configurar datos de prueba
+        Long idPedido = 1L;
+        String codigoRetiro = "39483932";
+        ActualizarPedidoRequest actualizarPedidoRequest = new ActualizarPedidoRequest();
+        actualizarPedidoRequest.setEstadoPedido(EstadoPedido.ENTREGADO);
+        actualizarPedidoRequest.setCodigoRetiro(codigoRetiro);
+
+        UsuarioAutenticado usuarioSesion = new UsuarioAutenticado();
+        usuarioSesion.setId(2L);  // Id de un usuario con rol de EMPLEADO
+        usuarioSesion.setAuthorities(Collections.singletonList(new SimpleGrantedAuthority(Rol.EMPLEADO.name())));
+        when(autenticacionService.obtenerUsuarioSesionActual()).thenReturn(usuarioSesion);
+
+        Pedido pedido = new Pedido();
+        pedido.setId(idPedido);
+        pedido.setEstadoPedido(EstadoPedido.LISTO);
+        pedido.setIdCliente(123L);  // ID de un cliente válido
+        pedido.setCodigoRetiro(codigoRetiro);
+        when(pedidoServicePort.obtenerPedidoPorId(idPedido)).thenReturn(Optional.of(pedido));
+
+        // Mock para el cliente
+        UsuarioDto cliente = new UsuarioDto();
+        cliente.setCelular("123456789");  // Número de celular válido
+
+        // Ejecutar el método a probar
+        pedidoHandler.actualizarPedido(idPedido, actualizarPedidoRequest);
+
+        // Verificar resultados
+        assertEquals(EstadoPedido.ENTREGADO, pedido.getEstadoPedido());
+        verify(pedidoServicePort, times(1)).savePedido(pedido);
+    }
+
+    @Test
+    public void testActualizarPedidoClienteoCancelado() throws PedidoInvalidException {
+        // Configurar datos de prueba
+        Long idPedido = 1L;
+        String codigoRetiro = "39483932";
+        ActualizarPedidoRequest actualizarPedidoRequest = new ActualizarPedidoRequest();
+        actualizarPedidoRequest.setEstadoPedido(EstadoPedido.CANCELADO);
+        actualizarPedidoRequest.setCodigoRetiro(codigoRetiro);
+
+        UsuarioAutenticado usuarioSesion = new UsuarioAutenticado();
+        usuarioSesion.setId(2L);  // Id de un usuario con rol de EMPLEADO
+        usuarioSesion.setAuthorities(Collections.singletonList(new SimpleGrantedAuthority(Rol.CLIENTE.name())));
+        when(autenticacionService.obtenerUsuarioSesionActual()).thenReturn(usuarioSesion);
+
+        Pedido pedido = new Pedido();
+        pedido.setId(idPedido);
+        pedido.setEstadoPedido(EstadoPedido.PENDIENTE);
+        pedido.setIdCliente(123L);  // ID de un cliente válido
+        pedido.setCodigoRetiro(codigoRetiro);
+        when(pedidoServicePort.obtenerPedidoPorId(idPedido)).thenReturn(Optional.of(pedido));
+
+        // Mock para el cliente
+        UsuarioDto cliente = new UsuarioDto();
+        cliente.setCelular("123456789");  // Número de celular válido
+
+        // Ejecutar el método a probar
+        pedidoHandler.actualizarPedido(idPedido, actualizarPedidoRequest);
+
+        // Verificar resultados
+        assertEquals(EstadoPedido.CANCELADO, pedido.getEstadoPedido());
+        verify(pedidoServicePort, times(1)).savePedido(pedido);
+    }
+
+    @Test
+    public void testActualizarPedidoClienteoCanceladoTrhowsPedidoInvalidException() throws PedidoInvalidException {
+        // Configurar datos de prueba
+        Long idPedido = 1L;
+        String codigoRetiro = "39483932";
+        ActualizarPedidoRequest actualizarPedidoRequest = new ActualizarPedidoRequest();
+        actualizarPedidoRequest.setEstadoPedido(EstadoPedido.CANCELADO);
+        actualizarPedidoRequest.setCodigoRetiro(codigoRetiro);
+
+        UsuarioAutenticado usuarioSesion = new UsuarioAutenticado();
+        usuarioSesion.setId(2L);  // Id de un usuario con rol de EMPLEADO
+        usuarioSesion.setAuthorities(Collections.singletonList(new SimpleGrantedAuthority(Rol.CLIENTE.name())));
+        when(autenticacionService.obtenerUsuarioSesionActual()).thenReturn(usuarioSesion);
+
+        Pedido pedido = new Pedido();
+        pedido.setId(idPedido);
+        pedido.setEstadoPedido(EstadoPedido.LISTO);
+        pedido.setIdCliente(123L);  // ID de un cliente válido
+        pedido.setCodigoRetiro(codigoRetiro);
+        when(pedidoServicePort.obtenerPedidoPorId(idPedido)).thenReturn(Optional.of(pedido));
+
+        // Mock para el cliente
+        UsuarioDto cliente = new UsuarioDto();
+        cliente.setCelular("123456789");  // Número de celular válido
+
+        // ACT ASSERT
+        assertThrows(PedidoInvalidException.class, () -> {
+            pedidoHandler.actualizarPedido(idPedido, actualizarPedidoRequest);
+        });
+    }
+
 }
