@@ -41,7 +41,6 @@ public class PedidoHandlerImpl implements IPedidoHandler {
     private static final Random random = new Random();
 
 
-
     @Override
     public void crearPedidoInDB(PedidoRequest pedidoRequest) throws PedidoInvalidException, RestauranteNotFoundException, PlatoNoExiste {
 
@@ -99,7 +98,7 @@ public class PedidoHandlerImpl implements IPedidoHandler {
         }
 
 
-        // Crear PIN aleatrio
+        // Crear PIN aleatorio
         String pin = String.format("%08d", random.nextInt(100000000));
 
 
@@ -190,19 +189,19 @@ public class PedidoHandlerImpl implements IPedidoHandler {
 
     public void actualizarPedido(Long idPedido, ActualizarPedidoRequest actualizarPedidoRequest) throws PedidoInvalidException {
         // 1 OBTENER ROL USUARIO
-        Rol  rolUsuarioSesion =  Rol.valueOf(autenticacionService.obtenerUsuarioSesionActual().getAuthorities().get(0).toString()) ;
+        Rol rolUsuarioSesion = Rol.valueOf(autenticacionService.obtenerUsuarioSesionActual().getAuthorities().get(0).toString());
         Long idUsuarioSesion = autenticacionService.obtenerUsuarioSesionActual().getId();
 
         //VALIDAR QUE EL PEDIDO EXISTA
         Optional<Pedido> pedidoOptional = pedidoServicePort.obtenerPedidoPorId(idPedido);
 
-        if(pedidoOptional.isEmpty()) throw new PedidoInvalidException("El id de pedido no existe");
-
+        if (pedidoOptional.isEmpty()) throw new PedidoInvalidException("El id de pedido no existe");
+        Pedido pedido = pedidoOptional.get();
 
         // 1. SI ES EMPLEADO PUEDE TOMAR EL PEDIDO y CAMBIAR EL ESTADO
         if (rolUsuarioSesion == Rol.EMPLEADO) {
 
-            Pedido pedido = pedidoOptional.get();
+
 
 
             // 1.1 SOLO SE PUEDE CAMBIAR A ESTADO EN_PREPARACION SI ESTA EN PENDIENTE
@@ -218,41 +217,48 @@ public class PedidoHandlerImpl implements IPedidoHandler {
 
 
             // 1.2 SOLO SE PUEDE CAMBIAR A LISTO SI ESTA EN EN_PENDIENTE
-            else if(actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.LISTO
-                    && pedido.getEstadoPedido() == EstadoPedido.EN_PREPARACION){
+            else if (actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.LISTO
+                    && pedido.getEstadoPedido() == EstadoPedido.EN_PREPARACION) {
 
                 pedido.setEstadoPedido(EstadoPedido.LISTO);
 
                 UsuarioDto cliente = usuarioServicePort.getUsuarioPorId(pedido.getIdCliente());
                 pedidoServicePort.notificarUsuario(cliente.getCelular(),
-                        "Buen dia, señor(a) " + cliente.getNombre() + " su pedido " + idPedido + " ya esta listo para recoger. \nRecuerde mostrar el siguiente pin: " +  pedido.getCodigoRetiro());
+                        "Buen dia, señor(a) " + cliente.getNombre() + " su pedido " + idPedido + " ya esta listo para recoger. \nRecuerde mostrar el siguiente pin: " + pedido.getCodigoRetiro());
                 pedidoServicePort.savePedido(pedido);
                 return;
             }
 
             // 1.3 SOLO SE PUEDE CAMBIAR A ENTREGADO SI ESTA LISTO
 
-            else if(actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.ENTREGADO
+            else if (actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.ENTREGADO
                     && pedido.getEstadoPedido() == EstadoPedido.LISTO) {
-                System.out.println("EFECTIVAMENTE PUEDES CAMBIAR DE LISTO A ENTREGADO");
-                return;
-            }
 
-            else {
-                System.out.println("OPERACION NO PERMITIDA");
+                String codigoRetiroPedido = pedido.getCodigoRetiro();
+                String codigoRetiroRequest = actualizarPedidoRequest.getCodigoRetiro();
+
+                if (!codigoRetiroPedido.equals(codigoRetiroRequest)) {
+                    throw new PedidoInvalidException("El código de retiro proporcionado no coincide con el pedido.");
+                }
+
+                pedido.setEstadoPedido(EstadoPedido.ENTREGADO);
+                pedidoServicePort.savePedido(pedido);
                 return;
+
+            } else {
+               throw new PedidoInvalidException("Opercion no permitida");
             }
 
         }
 
         // 2. SI ES CLIENTE SOLO PUEDE CAMBIAR EL ESTADO
-        if(rolUsuarioSesion == Rol.CLIENTE){
-            return;
+        if (rolUsuarioSesion == Rol.CLIENTE) {
+
 
             // 2.1 SOLO SE PUEDE CAMBIAR EL ESTADO A CANCELADO SI ESTA EN PENDIENTE
 
-        }
 
+        }
 
 
     }

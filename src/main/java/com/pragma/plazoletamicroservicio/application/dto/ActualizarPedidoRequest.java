@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 public class ActualizarPedidoRequest {
 
     private EstadoPedido estadoPedido;
+    private String codigoRetiro;
 
 }
