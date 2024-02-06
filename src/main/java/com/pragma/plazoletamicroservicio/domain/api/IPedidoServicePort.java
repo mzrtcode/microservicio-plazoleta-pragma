@@ -2,7 +2,7 @@ package com.pragma.plazoletamicroservicio.domain.api;
 
 import com.pragma.plazoletamicroservicio.domain.model.EstadoPedido;
 import com.pragma.plazoletamicroservicio.domain.model.Pedido;
-import com.pragma.plazoletamicroservicio.domain.model.Restaurante;
+import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.dto.TrazabilidadDto;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.entity.PedidoEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,5 +21,7 @@ public interface IPedidoServicePort {
     Optional<Pedido> obtenerPedidoPorId(Long idPedido);
 
     void notificarUsuario(String destinatario, String mensaje);
+
+    void crearRegistroEstadoPedido(TrazabilidadDto trazabilidadDto);
 
 }

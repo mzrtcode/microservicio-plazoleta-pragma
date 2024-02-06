@@ -7,6 +7,7 @@ import com.pragma.plazoletamicroservicio.application.mapper.IPlatoMapper;
 import com.pragma.plazoletamicroservicio.domain.api.*;
 import com.pragma.plazoletamicroservicio.domain.exception.PlatoNoExiste;
 import com.pragma.plazoletamicroservicio.domain.model.*;
+import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.dto.TrazabilidadDto;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.dto.UsuarioDto;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.entity.EmpleadoRestauranteEntity;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.entity.PedidoEntity;
@@ -115,7 +116,13 @@ public class PedidoHandlerImpl implements IPedidoHandler {
         //Colocamos el id del Pedido creado para poder registar el pedido en pedidos_platos
         pedido.setId(pedidoEntity.getId());
 
+        // Registrar el nuevo pedido en trazabilidad
+        TrazabilidadDto trazabilidadDto = new TrazabilidadDto();
 
+        trazabilidadDto.setIdPedido(pedidoEntity.getId());
+        trazabilidadDto.setIdCliente(idClienteSesion);
+        trazabilidadDto.setEstadoPedido(EstadoPedido.PENDIENTE);
+        pedidoServicePort.crearRegistroEstadoPedido(trazabilidadDto);
 
         /* 2 Con el id del pedido creado por cada plato entonces creamos un registro en PEDIDOS_PLATOS
         iteramos los id de los platos y en todos colocamos el id del pedido al que pertenecen */
@@ -210,6 +217,17 @@ public class PedidoHandlerImpl implements IPedidoHandler {
                 pedido.setIdEmpleadoAsignado(idUsuarioSesion);
 
                 pedidoServicePort.savePedido(pedido);
+
+                // Registrar en trazabilidad el cambio de estado
+                TrazabilidadDto trazabilidadDto = new TrazabilidadDto();
+
+                trazabilidadDto.setIdPedido(pedido.getId());
+                trazabilidadDto.setIdCliente(pedido.getIdCliente());
+                trazabilidadDto.setEstadoPedido(EstadoPedido.EN_PREPARACION);
+                trazabilidadDto.setIdEmpleado(idUsuarioSesion);
+                pedidoServicePort.crearRegistroEstadoPedido(trazabilidadDto);
+
+                pedidoServicePort.crearRegistroEstadoPedido(trazabilidadDto);
                 return;
             }
 
@@ -217,6 +235,15 @@ public class PedidoHandlerImpl implements IPedidoHandler {
             // 1.2 SOLO SE PUEDE CAMBIAR A LISTO SI ESTA EN EN_PENDIENTE
             else if (actualizarPedidoRequest.getEstadoPedido() == EstadoPedido.LISTO
                     && pedido.getEstadoPedido() == EstadoPedido.EN_PREPARACION) {
+
+
+                // Registrar en trazabilidad el cambio de estado
+                TrazabilidadDto trazabilidadDto = new TrazabilidadDto();
+                trazabilidadDto.setIdPedido(pedido.getId());
+                trazabilidadDto.setIdCliente(pedido.getIdCliente());
+                trazabilidadDto.setEstadoPedido(EstadoPedido.LISTO);
+                trazabilidadDto.setIdEmpleado(idUsuarioSesion);
+                pedidoServicePort.crearRegistroEstadoPedido(trazabilidadDto);
 
                 pedido.setEstadoPedido(EstadoPedido.LISTO);
 
@@ -239,6 +266,16 @@ public class PedidoHandlerImpl implements IPedidoHandler {
                     throw new PedidoInvalidException("El código de retiro proporcionado no coincide con el pedido.");
                 }
 
+
+                // Registrar en trazabilidad el cambio de estado
+                TrazabilidadDto trazabilidadDto = new TrazabilidadDto();
+
+                trazabilidadDto.setIdPedido(pedido.getId());
+                trazabilidadDto.setIdCliente(pedido.getIdCliente());
+                trazabilidadDto.setEstadoPedido(EstadoPedido.ENTREGADO);
+                trazabilidadDto.setIdEmpleado(idUsuarioSesion);
+                pedidoServicePort.crearRegistroEstadoPedido(trazabilidadDto);
+
                 pedido.setEstadoPedido(EstadoPedido.ENTREGADO);
                 pedidoServicePort.savePedido(pedido);
                 return;
@@ -255,6 +292,14 @@ public class PedidoHandlerImpl implements IPedidoHandler {
                     && pedido.getEstadoPedido() == EstadoPedido.PENDIENTE)) {
                 throw new PedidoInvalidException("Solo se pueden cancelar pedidos en estado PENDIENTE");
             }
+
+            // Registrar en trazabilidad el cambio de estado
+            TrazabilidadDto trazabilidadDto = new TrazabilidadDto();
+
+            trazabilidadDto.setIdPedido(pedido.getId());
+            trazabilidadDto.setIdCliente(pedido.getIdCliente());
+            trazabilidadDto.setEstadoPedido(EstadoPedido.CANCELADO);
+            pedidoServicePort.crearRegistroEstadoPedido(trazabilidadDto);
 
             pedido.setEstadoPedido(EstadoPedido.CANCELADO);
             pedidoServicePort.savePedido(pedido);

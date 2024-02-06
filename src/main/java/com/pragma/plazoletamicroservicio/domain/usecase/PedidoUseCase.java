@@ -4,6 +4,7 @@ import com.pragma.plazoletamicroservicio.domain.api.IPedidoServicePort;
 import com.pragma.plazoletamicroservicio.domain.model.EstadoPedido;
 import com.pragma.plazoletamicroservicio.domain.model.Pedido;
 import com.pragma.plazoletamicroservicio.domain.spi.IPedidoPersistencePort;
+import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.dto.TrazabilidadDto;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.entity.PedidoEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,6 +41,11 @@ public class PedidoUseCase implements IPedidoServicePort {
     @Override
     public void notificarUsuario(String destinatario, String mensaje) {
         pedidoPersistencePort.notificarUsuario(destinatario, mensaje);
+    }
+
+    @Override
+    public void crearRegistroEstadoPedido(TrazabilidadDto trazabilidadDto) {
+        pedidoPersistencePort.crearRegistroEstadoPedido(trazabilidadDto);
     }
 
 

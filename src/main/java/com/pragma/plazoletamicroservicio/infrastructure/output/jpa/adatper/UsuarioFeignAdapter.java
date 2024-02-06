@@ -1,6 +1,7 @@
 package com.pragma.plazoletamicroservicio.infrastructure.output.jpa.adatper;
 
 import com.pragma.plazoletamicroservicio.domain.spi.IUsuarioPersistencePort;
+import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.dto.TrazabilidadDto;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.dto.UsuarioDto;
 import com.pragma.plazoletamicroservicio.infrastructure.output.jpa.feignclient.IUsuarioFeignClient;
 import lombok.RequiredArgsConstructor;
